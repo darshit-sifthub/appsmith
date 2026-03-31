@@ -13,13 +13,17 @@
   },
   "applicationVersion": 2,
   "collapseInvisibleWidgets": true,
-  "color": "#FFEBFB",
+  "color": "#F1DEFF",
   "evaluationVersion": 2,
   "icon": "headphones",
   "pages": [
     {
       "id": "Usage Logs",
       "isDefault": true
+    },
+    {
+      "id": "Events",
+      "isDefault": false
     }
   ],
   "unpublishedApplicationDetail": {

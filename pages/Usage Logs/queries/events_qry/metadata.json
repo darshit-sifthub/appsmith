@@ -10,17 +10,17 @@
       "formData": {
         "aggregate": {
           "arrayPipelines": {
-            "data": ""
+            "data": "[\n\t{\n\t\t\"$match\": {\n\t\t\t\"timestamp\": {\n\t\t\t\t\"$gte\": {{ Math.floor(new Date(start_date.selectedDate).getTime() / 1000) }},\n\t\t\t\t\"$lte\": {{ Math.floor(new Date(end_date.selectedDate).getTime() / 1000) }}\n\t\t\t},\n\t\t\t\"email\": {{ user_id.selectedOptionValue || {\"$exists\": true} }},\n\t\t\t\"environment\": {{ env_select.selectedOptionValue || {\"$exists\": true} }}\n\t\t}\n\t},\n\t{ \"$sort\": { \"timestamp\": -1 } },\n\t { \"$limit\": 50 },\n\t{\n\t\t\"$project\": {\n\t\t\t\"_id\": 0,\n\t\t\t\"Email Date\": {\n\t\t\t\t\"$cond\": {\n\t\t\t\t\t\"if\": { \"$gt\": [\"$email_date\", 0] },\n\t\t\t\t\t\"then\": {\n\t\t\t\t\t\t\"$dateToString\": {\n\t\t\t\t\t\t\t\"format\": \"%Y-%m-%d\",\n\t\t\t\t\t\t\t\"date\": { \"$toDate\": { \"$multiply\": [\"$email_date\", 1] } }\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\t\"else\": \"N/A\"\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"Event Date\": {\n\t\t\t\t\"$dateToString\": {\n\t\t\t\t\t\"format\": \"%Y-%m-%d %H:%M:%S\",\n\t\t\t\t\t\"date\": { \"$toDate\": { \"$multiply\": [\"$timestamp\", 1000] } }\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"Event ID\": { \"$ifNull\": [\"$sg_event_id\", \"N/A\"] },\n\t\t\t\"Event Type\": { \"$ifNull\": [\"$event\", \"N/A\"] },\n\t\t\t\"Client ID\": { \"$ifNull\": [\"$client_id\", \"N/A\"] },\n\t\t\t\"Environment\": { \"$ifNull\": [\"$environment\", \"N/A\"] },\n\t\t\t\"Recipient Email\": { \"$ifNull\": [\"$email\", \"N/A\"] },\n\t\t\t\"Click URL\": { \"$ifNull\": [\"$url\", \"\"] },\n\t\t\t\"Workflow Name\": { \"$ifNull\": [\"$workflow_name\", \"N/A\"] },\n\t\t\t\"Workflow ID\": { \"$ifNull\": [\"$workflow_id\", \"N/A\"] },\n\t\t\t\"Subject\": { \"$ifNull\": [\"$subject\", \"N/A\"] },\n\t\t\t\"Template Name\": { \"$ifNull\": [\"$template_name\", \"N/A\"] },\n\t\t\t\"Message ID\": { \"$ifNull\": [\"$sg_message_id\", \"N/A\"] }\n\t\t}\n\t}\n]"
           },
           "limit": {
-            "data": "10"
+            "data": "2000"
           }
         },
         "collection": {
           "data": "events"
         },
         "command": {
-          "data": "FIND"
+          "data": "AGGREGATE"
         },
         "count": {
           "query": {
@@ -45,13 +45,13 @@
         },
         "find": {
           "limit": {
-            "data": ""
+            "data": "2000"
           },
           "projection": {
             "data": ""
           },
           "query": {
-            "data": "[\n\t{\n\t\t\"$match\": {\n\t\t\t\"timestamp\": {\n\t\t\t\t\"$gte\": {{ Math.floor(new Date(start_date.selectedDate).getTime() / 1000) }},\n\t\t\t\t\"$lte\": {{ Math.floor(new Date(end_date.selectedDate).getTime() / 1000) }}\n\t\t\t},\n\t\t\t\"email\": {{ user_id.selectedOptionValue || {\"$exists\": true} }},\n\t\t\t\"environment\": {{ envSelect.selectedOptionValue || {\"$exists\": true} }}\n\t\t}\n\t},\n\t{ \"$sort\": { \"timestamp\": -1 } },\n\t{ \"$skip\": {{ (Table1.pageNo - 1) * 50 }} },\n\t { \"$limit\": 50 },\n\t{\n\t\t\"$project\": {\n\t\t\t\"_id\": 0,\n\t\t\t\"Email Date\": {\n\t\t\t\t\"$cond\": {\n\t\t\t\t\t\"if\": { \"$gt\": [\"$email_date\", 0] },\n\t\t\t\t\t\"then\": {\n\t\t\t\t\t\t\"$dateToString\": {\n\t\t\t\t\t\t\t\"format\": \"%Y-%m-%d\",\n\t\t\t\t\t\t\t\"date\": { \"$toDate\": { \"$multiply\": [\"$email_date\", 1] } }\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\t\"else\": \"N/A\"\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"Event Date\": {\n\t\t\t\t\"$dateToString\": {\n\t\t\t\t\t\"format\": \"%Y-%m-%d %H:%M:%S\",\n\t\t\t\t\t\"date\": { \"$toDate\": { \"$multiply\": [\"$timestamp\", 1000] } }\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"Event ID\": { \"$ifNull\": [\"$sg_event_id\", \"N/A\"] },\n\t\t\t\"Event Type\": { \"$ifNull\": [\"$event\", \"N/A\"] },\n\t\t\t\"Client ID\": { \"$ifNull\": [\"$client_id\", \"N/A\"] },\n\t\t\t\"Environment\": { \"$ifNull\": [\"$environment\", \"N/A\"] },\n\t\t\t\"Recipient Email\": { \"$ifNull\": [\"$email\", \"N/A\"] },\n\t\t\t\"Click URL\": { \"$ifNull\": [\"$url\", \"\"] },\n\t\t\t\"Workflow Name\": { \"$ifNull\": [\"$workflow_name\", \"N/A\"] },\n\t\t\t\"Workflow ID\": { \"$ifNull\": [\"$workflow_id\", \"N/A\"] },\n\t\t\t\"Subject\": { \"$ifNull\": [\"$subject\", \"N/A\"] },\n\t\t\t\"Template Name\": { \"$ifNull\": [\"$template_name\", \"N/A\"] },\n\t\t\t\"Message ID\": { \"$ifNull\": [\"$sg_message_id\", \"N/A\"] }\n\t\t}\n\t}\n]"
+            "data": "[\n\t{\n\t\t\"$match\": {\n\t\t\t\"timestamp\": {\n\t\t\t\t\"$gte\": {{ Math.floor(new Date(start_date.selectedDate).getTime()) }},\n\t\t\t\t\"$lte\": {{ Math.floor(new Date(end_date.selectedDate).getTime()) }}\n\t\t\t},\n\t\t\t\"email\": {{ user_id.selectedOptionValue || {\"$exists\": true} }},\n\t\t\t\"environment\": {{ env_select.selectedOptionValue || {\"$exists\": true} }}\n\t\t}\n\t},\n\t{ \"$sort\": { \"timestamp\": -1 } },\n\t{ \"$skip\": {{ (Table1.pageNo - 1) * 50 }} },\n\t { \"$limit\": 50 },\n\t{\n\t\t\"$project\": {\n\t\t\t\"_id\": 0,\n\t\t\t\"Email Date\": {\n\t\t\t\t\"$cond\": {\n\t\t\t\t\t\"if\": { \"$gt\": [\"$email_date\", 0] },\n\t\t\t\t\t\"then\": {\n\t\t\t\t\t\t\"$dateToString\": {\n\t\t\t\t\t\t\t\"format\": \"%Y-%m-%d\",\n\t\t\t\t\t\t\t\"date\": { \"$toDate\": { \"$multiply\": [\"$email_date\", 1] } }\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\t\"else\": \"N/A\"\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"Event Date\": {\n\t\t\t\t\"$dateToString\": {\n\t\t\t\t\t\"format\": \"%Y-%m-%d %H:%M:%S\",\n\t\t\t\t\t\"date\": { \"$toDate\": { \"$multiply\": [\"$timestamp\", 1000] } }\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"Event ID\": { \"$ifNull\": [\"$sg_event_id\", \"N/A\"] },\n\t\t\t\"Event Type\": { \"$ifNull\": [\"$event\", \"N/A\"] },\n\t\t\t\"Client ID\": { \"$ifNull\": [\"$client_id\", \"N/A\"] },\n\t\t\t\"Environment\": { \"$ifNull\": [\"$environment\", \"N/A\"] },\n\t\t\t\"Recipient Email\": { \"$ifNull\": [\"$email\", \"N/A\"] },\n\t\t\t\"Click URL\": { \"$ifNull\": [\"$url\", \"\"] },\n\t\t\t\"Workflow Name\": { \"$ifNull\": [\"$workflow_name\", \"N/A\"] },\n\t\t\t\"Workflow ID\": { \"$ifNull\": [\"$workflow_id\", \"N/A\"] },\n\t\t\t\"Subject\": { \"$ifNull\": [\"$subject\", \"N/A\"] },\n\t\t\t\"Template Name\": { \"$ifNull\": [\"$template_name\", \"N/A\"] },\n\t\t\t\"Message ID\": { \"$ifNull\": [\"$sg_message_id\", \"N/A\"] }\n\t\t}\n\t}\n]"
           },
           "skip": {
             "data": ""
@@ -67,7 +67,7 @@
         },
         "misc": {
           "formToNativeQuery": {
-            "data": "{\n  \"find\": \"events\",\n  \"filter\": [\n\t{\n\t\t\"$match\": {\n\t\t\t\"timestamp\": {\n\t\t\t\t\"$gte\": {{ Math.floor(new Date(start_date.selectedDate).getTime() / 1000) }},\n\t\t\t\t\"$lte\": {{ Math.floor(new Date(end_date.selectedDate).getTime() / 1000) }}\n\t\t\t},\n\t\t\t\"email\": {{ user_id.selectedOptionValue || {\"$exists\": true} }},\n\t\t\t\"environment\": {{ envSelect.selectedOptionValue || {\"$exists\": true} }}\n\t\t}\n\t},\n\t{ \"$sort\": { \"timestamp\": -1 } },\n\t{ \"$skip\": {{ (Table1.pageNo - 1) * 50 }} },\n\t { \"$limit\": 50 },\n\t{\n\t\t\"$project\": {\n\t\t\t\"_id\": 0,\n\t\t\t\"Email Date\": {\n\t\t\t\t\"$cond\": {\n\t\t\t\t\t\"if\": { \"$gt\": [\"$email_date\", 0] },\n\t\t\t\t\t\"then\": {\n\t\t\t\t\t\t\"$dateToString\": {\n\t\t\t\t\t\t\t\"format\": \"%Y-%m-%d\",\n\t\t\t\t\t\t\t\"date\": { \"$toDate\": { \"$multiply\": [\"$email_date\", 1] } }\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\t\"else\": \"N/A\"\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"Event Date\": {\n\t\t\t\t\"$dateToString\": {\n\t\t\t\t\t\"format\": \"%Y-%m-%d %H:%M:%S\",\n\t\t\t\t\t\"date\": { \"$toDate\": { \"$multiply\": [\"$timestamp\", 1000] } }\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"Event ID\": { \"$ifNull\": [\"$sg_event_id\", \"N/A\"] },\n\t\t\t\"Event Type\": { \"$ifNull\": [\"$event\", \"N/A\"] },\n\t\t\t\"Client ID\": { \"$ifNull\": [\"$client_id\", \"N/A\"] },\n\t\t\t\"Environment\": { \"$ifNull\": [\"$environment\", \"N/A\"] },\n\t\t\t\"Recipient Email\": { \"$ifNull\": [\"$email\", \"N/A\"] },\n\t\t\t\"Click URL\": { \"$ifNull\": [\"$url\", \"\"] },\n\t\t\t\"Workflow Name\": { \"$ifNull\": [\"$workflow_name\", \"N/A\"] },\n\t\t\t\"Workflow ID\": { \"$ifNull\": [\"$workflow_id\", \"N/A\"] },\n\t\t\t\"Subject\": { \"$ifNull\": [\"$subject\", \"N/A\"] },\n\t\t\t\"Template Name\": { \"$ifNull\": [\"$template_name\", \"N/A\"] },\n\t\t\t\"Message ID\": { \"$ifNull\": [\"$sg_message_id\", \"N/A\"] }\n\t\t}\n\t}\n],\n  \"limit\": 10,\n  \"batchSize\": 10\n}\n",
+            "data": "{\n  \"aggregate\": \"events\",\n  \"pipeline\": [\n\t{\n\t\t\"$match\": {\n\t\t\t\"timestamp\": {\n\t\t\t\t\"$gte\": {{ Math.floor(new Date(start_date.selectedDate).getTime() / 1000) }},\n\t\t\t\t\"$lte\": {{ Math.floor(new Date(end_date.selectedDate).getTime() / 1000) }}\n\t\t\t},\n\t\t\t\"email\": {{ user_id.selectedOptionValue || {\"$exists\": true} }},\n\t\t\t\"environment\": {{ env_select.selectedOptionValue || {\"$exists\": true} }}\n\t\t}\n\t},\n\t{ \"$sort\": { \"timestamp\": -1 } },\n\t { \"$limit\": 50 },\n\t{\n\t\t\"$project\": {\n\t\t\t\"_id\": 0,\n\t\t\t\"Email Date\": {\n\t\t\t\t\"$cond\": {\n\t\t\t\t\t\"if\": { \"$gt\": [\"$email_date\", 0] },\n\t\t\t\t\t\"then\": {\n\t\t\t\t\t\t\"$dateToString\": {\n\t\t\t\t\t\t\t\"format\": \"%Y-%m-%d\",\n\t\t\t\t\t\t\t\"date\": { \"$toDate\": { \"$multiply\": [\"$email_date\", 1] } }\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\t\"else\": \"N/A\"\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"Event Date\": {\n\t\t\t\t\"$dateToString\": {\n\t\t\t\t\t\"format\": \"%Y-%m-%d %H:%M:%S\",\n\t\t\t\t\t\"date\": { \"$toDate\": { \"$multiply\": [\"$timestamp\", 1000] } }\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"Event ID\": { \"$ifNull\": [\"$sg_event_id\", \"N/A\"] },\n\t\t\t\"Event Type\": { \"$ifNull\": [\"$event\", \"N/A\"] },\n\t\t\t\"Client ID\": { \"$ifNull\": [\"$client_id\", \"N/A\"] },\n\t\t\t\"Environment\": { \"$ifNull\": [\"$environment\", \"N/A\"] },\n\t\t\t\"Recipient Email\": { \"$ifNull\": [\"$email\", \"N/A\"] },\n\t\t\t\"Click URL\": { \"$ifNull\": [\"$url\", \"\"] },\n\t\t\t\"Workflow Name\": { \"$ifNull\": [\"$workflow_name\", \"N/A\"] },\n\t\t\t\"Workflow ID\": { \"$ifNull\": [\"$workflow_id\", \"N/A\"] },\n\t\t\t\"Subject\": { \"$ifNull\": [\"$subject\", \"N/A\"] },\n\t\t\t\"Template Name\": { \"$ifNull\": [\"$template_name\", \"N/A\"] },\n\t\t\t\"Message ID\": { \"$ifNull\": [\"$sg_message_id\", \"N/A\"] }\n\t\t}\n\t}\n],\n  \"cursor\": {}\n}\n",
             "status": "SUCCESS"
           }
         },
@@ -99,11 +99,14 @@
     "dynamicBindingPathList": [
       {
         "key": "formData.find.query.data"
+      },
+      {
+        "key": "formData.aggregate.arrayPipelines.data"
       }
     ],
     "executeOnLoad": false,
     "name": "events_qry",
     "pageId": "Usage Logs",
-    "userSetOnLoad": false
+    "userSetOnLoad": true
   }
 }

@@ -1,6 +1,6 @@
 {
   "gitSyncId": "67455667d4a6ed75f9345dde_4a71abb3-5ac6-4215-b7ae-863b56810f23",
-  "id": "Usage Logs_workflow_summaries_aggregated_",
+  "id": "Usage Logs_workflow_summary_agg_qry",
   "pluginId": "mongo-plugin",
   "pluginType": "DB",
   "unpublishedAction": {
@@ -101,7 +101,7 @@
       }
     ],
     "executeOnLoad": false,
-    "name": "workflow_summaries_aggregated_",
+    "name": "workflow_summary_agg_qry",
     "pageId": "Usage Logs",
     "userSetOnLoad": false
   }

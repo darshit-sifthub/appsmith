@@ -5,12 +5,12 @@
   "borderColor": "#E0DEDE",
   "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
   "borderWidth": 1,
-  "bottomRow": 34,
+  "bottomRow": 156,
   "boxShadow": "{{appsmith.theme.boxShadow.appBoxShadow}}",
   "children": [
     {
       "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
-      "bottomRow": 300,
+      "bottomRow": 1520,
       "boxShadow": "{{appsmith.theme.boxShadow.appBoxShadow}}",
       "canExtend": true,
       "detachFromLayout": true,
@@ -56,7 +56,7 @@
     },
     {
       "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
-      "bottomRow": 300,
+      "bottomRow": 1520,
       "boxShadow": "{{appsmith.theme.boxShadow.appBoxShadow}}",
       "canExtend": true,
       "detachFromLayout": true,
@@ -129,7 +129,7 @@
   "mobileRightColumn": 7,
   "mobileTopRow": 0,
   "needsErrorInfo": false,
-  "originalBottomRow": 34,
+  "originalBottomRow": 129,
   "originalTopRow": 0,
   "parentColumnSpace": 13.875,
   "parentId": "wu7jx06bc6",
@@ -161,5 +161,5 @@
   "type": "TABS_WIDGET",
   "version": 3,
   "widgetId": "ljc3bnqrg4",
-  "widgetName": "Tabs1"
+  "widgetName": "events_tab"
 }

@@ -45,7 +45,7 @@
   "labelTextSize": "0.875rem",
   "labelTooltip": "",
   "labelWidth": 5,
-  "leftColumn": 25,
+  "leftColumn": 23,
   "maxDynamicHeight": 9000,
   "minDynamicHeight": 4,
   "minWidth": 450,
@@ -69,7 +69,7 @@
   "placeholderText": "Client",
   "renderMode": "CANVAS",
   "responsiveBehavior": "fill",
-  "rightColumn": 31,
+  "rightColumn": 29,
   "searchTags": [
     "dropdown"
   ],
