@@ -20,26 +20,6 @@
     {
       "id": "Usage Logs",
       "isDefault": true
-    },
-    {
-      "id": "Key numbers",
-      "isDefault": false
-    },
-    {
-      "id": "Knowledge",
-      "isDefault": false
-    },
-    {
-      "id": "Developer",
-      "isDefault": false
-    },
-    {
-      "id": "Page1",
-      "isDefault": false
-    },
-    {
-      "id": "Page2",
-      "isDefault": false
     }
   ],
   "unpublishedApplicationDetail": {
