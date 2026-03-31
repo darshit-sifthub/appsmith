@@ -101,7 +101,7 @@
       "widgetName": "Canvas18CopyCopy"
     }
   ],
-  "defaultTab": "Active Users",
+  "defaultTab": "Accounts",
   "dynamicBindingPathList": [
     {
       "key": "accentColor"
