@@ -453,7 +453,7 @@
     "tabfzi0ti9fi2": {
       "id": "tabfzi0ti9fi2",
       "index": 7,
-      "isVisible": true,
+      "isVisible": false,
       "label": "Events",
       "widgetId": "wu7jx06bc6"
     },
