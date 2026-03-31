@@ -1,0 +1,7 @@
+{
+  "find": "conversation_history",
+  "filter": {{ ai_teammate_js.getMatchQuery() }},
+  "sort": { created_at: -1 },
+  "limit": 2000,
+  "batchSize": 2000
+}

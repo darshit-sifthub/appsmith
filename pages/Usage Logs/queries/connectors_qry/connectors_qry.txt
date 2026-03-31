@@ -1,0 +1,4 @@
+SELECT cm.name, cm.`type`, cc.client_id, cc.created_dt as connected_dt from connector_config cc
+inner join connector_master cm on cm.id = cc.connector_id and cm.is_active = 1 and cm.is_delete = 0
+where cc.is_active = 1 and cc.is_delete = 0 and cc.status = 'ACTIVE' {{ connector_filter_js.getMatchQuery() }} and cm.`type`
+in ('APP', 'BOT', 'MY_APP') group by cm.name, cm.type, cc.client_id;

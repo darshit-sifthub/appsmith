@@ -1,0 +1,11 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_9c64c618-7e70-4d95-acb6-4729a9e488ab",
+  "id": "Usage Logs_workflow_logs_filter_js",
+  "unpublishedCollection": {
+    "name": "workflow_logs_filter_js",
+    "pageId": "Usage Logs",
+    "pluginId": "js-plugin",
+    "pluginType": "JS",
+    "variables": []
+  }
+}

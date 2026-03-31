@@ -1,0 +1,108 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_0d323e74-0fa0-4699-9f4d-f7148a4ab4d4",
+  "id": "Usage Logs_sow_logs_qry",
+  "pluginId": "mongo-plugin",
+  "pluginType": "DB",
+  "unpublishedAction": {
+    "actionConfiguration": {
+      "encodeParamsToggle": true,
+      "formData": {
+        "aggregate": {
+          "arrayPipelines": {
+            "data": "[\n\t{\n\t\t$match: {\n\t\t\t\"workflow_name\": \"SOW_WORKFLOW\"\n\t\t}\n\t},\n\t{\n\t\t$match: {{ workflow_logs_filter_js.getMatchQuery() }}\n\t},\n\t\t{ $sort: { started_at: -1 } },\n\t{\n\t$project: {\n\t_id: 0,\n\tcreated_at: 1,\n\tevent_subject: 1,\n\tclient_id: 1,\n\tworkflow_name: 1,\n\tattendee_emails: 1,\n\tcustomer_name: \"$processed_emails.email_content.customer_name\",\n\tcall_name: \"$processed_emails.email_content.call_name\",\n\tcall_date: \"$processed_emails.email_content.call_date\",\n\n\texecutive_snapshot: \"$processed_emails.email_content.executive_snapshot_context.engagement_summary\",\n\tengagement_duration: \"$processed_emails.email_content.executive_snapshot_context.timeline.duration\",\n\tengagement_start_date: \"$processed_emails.email_content.executive_snapshot_context.timeline.start_date\",\n\tprospect_vendor: \"$processed_emails.email_content.executive_snapshot_context.parties.prospect\",\n\n\tcommercials_text: {\n\t$let: {\n\tvars: { cms: { $ifNull: [\"$processed_emails.email_content.executive_snapshot_context.commercials\", []] } },\nin: {\n\t$reduce: {\n\t\tinput: \"$$cms\",\n\t\tinitialValue: \"\",\n\t\tin: {\n\t\t\t$concat: [\n\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\"$$this\"\n\t\t\t]\n\t\t}\n\t}\n}\n}\n},\n\nprospect_background: \"$processed_emails.email_content.business_scope_context.prospect_background\",\n\npain_points_text: {\n\t$let: {\n\t\tvars: { pts: { $ifNull: [\"$processed_emails.email_content.business_scope_context.pain_points\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$pts\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nobjectives_text: {\n\t$let: {\n\t\tvars: { obs: { $ifNull: [\"$processed_emails.email_content.business_scope_context.objectives\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$obs\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nprospect_attendees_text: {\n\t$let: {\n\t\tvars: {\n\t\t\tpaAll: {\n\t\t\t\t$reduce: {\n\t\t\t\t\tinput: {\n\t\t\t\t\t\t$map: {\n\t\t\t\t\t\t\tinput: { $ifNull: [\"$processed_emails.email_content.stakeholders_points\", []] },\n\t\t\t\t\t\t\tas: \"sp\",\n\t\t\t\t\t\t\tin: { $ifNull: [\"$$sp.prospect_attendees\", []] }\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\tinitialValue: [],\n\t\t\t\t\tin: { $concatArrays: [\"$$value\", \"$$this\"] }\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$paAll\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this.attendee\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nour_attendees_text: {\n\t$let: {\n\t\tvars: {\n\t\t\toaAll: {\n\t\t\t\t$reduce: {\n\t\t\t\t\tinput: {\n\t\t\t\t\t\t$map: {\n\t\t\t\t\t\t\tinput: { $ifNull: [\"$processed_emails.email_content.stakeholders_points\", []] },\n\t\t\t\t\t\t\tas: \"sp\",\n\t\t\t\t\t\t\tin: { $ifNull: [\"$$sp.our_attendees\", []] }\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\tinitialValue: [],\n\t\t\t\t\tin: { $concatArrays: [\"$$value\", \"$$this\"] }\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$oaAll\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this.attendee\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nuse_cases_text: {\n\t$let: {\n\t\tvars: { ucs: { $ifNull: [\"$processed_emails.email_content.solution_scope_context.use_cases\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$ucs\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\npending_commitments_text: {\n\t$let: {\n\t\tvars: { pcs: { $ifNull: [\"$processed_emails.email_content.solution_scope_context.pending_commitments\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$pcs\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nout_of_scope_text: {\n\t$let: {\n\t\tvars: { oos: { $ifNull: [\"$processed_emails.email_content.solution_scope_context.out_of_scope\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$oos\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\ndeliverables_text: {\n\t$let: {\n\t\tvars: { dvs: { $ifNull: [\"$processed_emails.email_content.solution_scope_context.deliverables\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: {\n\t\t\t\t\t$map: {\n\t\t\t\t\t\tinput: \"$$dvs\",\n\t\t\t\t\t\tas: \"d\",\n\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t{ $ifNull: [\"$$d.description\", \"\"] },\n\t\t\t\t\t\t\t\t\" (Owner: \", { $ifNull: [\"$$d.owner\", \"\"] }, \")\",\n\t\t\t\t\t\t\t\t\" (Timing: \", { $ifNull: [\"$$d.timing\", \"TBD\"] }, \")\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\ntechnical_notes_text: {\n\t$let: {\n\t\tvars: { tns: { $ifNull: [\"$processed_emails.email_content.technical_environment_context.technical_notes\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$tns\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\noverall_duration: \"$processed_emails.email_content.plan_cadence_context.overall_duration\",\n\nphased_plan_text: {\n\t$let: {\n\t\tvars: { pps: { $ifNull: [\"$processed_emails.email_content.plan_cadence_context.phased_plan\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: {\n\t\t\t\t\t$map: {\n\t\t\t\t\t\tinput: \"$$pps\",\n\t\t\t\t\t\tas: \"p\",\n\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t{ $ifNull: [\"$$p.timeframe\", \"\"] },\n\t\t\t\t\t\t\t\t\": \",\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\t\t\t\tinput: { $ifNull: [\"$$p.activities\", []] },\n\t\t\t\t\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \", \"] },\n\t\t\t\t\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nprospect_responsibilities_text: {\n\t$let: {\n\t\tvars: { prs: { $ifNull: [\"$processed_emails.email_content.plan_cadence_context.prospect_responsibilities\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$prs\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\ndependencies_text: {\n\t$let: {\n\t\tvars: { deps: { $ifNull: [\"$processed_emails.email_content.plan_cadence_context.dependencies\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$deps\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\ncritical_blockers_text: {\n\t$let: {\n\t\tvars: { cbs: { $ifNull: [\"$processed_emails.email_content.risk_alerts_context.critical_blockers\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$cbs\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\ntop_risks_text: {\n\t$let: {\n\t\tvars: { trs: { $ifNull: [\"$processed_emails.email_content.risk_alerts_context.top_risks\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$trs\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nkpis_text: {\n\t$let: {\n\t\tvars: { kps: { $ifNull: [\"$processed_emails.email_content.success_metrics_context.kpis\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$kps\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nmeasurement_approach: \"$processed_emails.email_content.success_metrics_context.measurement_approach\",\n\t\t\"tx_consumed\": 1\n}\n}\n]"
+          },
+          "limit": {
+            "data": "2000"
+          }
+        },
+        "collection": {
+          "data": "ingestion_workflow_logs"
+        },
+        "command": {
+          "data": "AGGREGATE"
+        },
+        "count": {
+          "query": {
+            "data": ""
+          }
+        },
+        "delete": {
+          "limit": {
+            "data": "SINGLE"
+          },
+          "query": {
+            "data": ""
+          }
+        },
+        "distinct": {
+          "key": {
+            "data": ""
+          },
+          "query": {
+            "data": ""
+          }
+        },
+        "find": {
+          "limit": {
+            "data": ""
+          },
+          "projection": {
+            "data": ""
+          },
+          "query": {
+            "data": ""
+          },
+          "skip": {
+            "data": ""
+          },
+          "sort": {
+            "data": ""
+          }
+        },
+        "insert": {
+          "documents": {
+            "data": ""
+          }
+        },
+        "misc": {
+          "formToNativeQuery": {
+            "data": "{\n  \"aggregate\": \"ingestion_workflow_logs\",\n  \"pipeline\": [\n\t{\n\t\t$match: {\n\t\t\t\"workflow_name\": \"SOW_WORKFLOW\"\n\t\t}\n\t},\n\t{\n\t\t$match: {{ workflow_logs_filter_js.getMatchQuery() }}\n\t},\n\t\t{ $sort: { started_at: -1 } },\n\t{\n\t$project: {\n\t_id: 0,\n\tcreated_at: 1,\n\tevent_subject: 1,\n\tclient_id: 1,\n\tworkflow_name: 1,\n\tattendee_emails: 1,\n\tcustomer_name: \"$processed_emails.email_content.customer_name\",\n\tcall_name: \"$processed_emails.email_content.call_name\",\n\tcall_date: \"$processed_emails.email_content.call_date\",\n\n\texecutive_snapshot: \"$processed_emails.email_content.executive_snapshot_context.engagement_summary\",\n\tengagement_duration: \"$processed_emails.email_content.executive_snapshot_context.timeline.duration\",\n\tengagement_start_date: \"$processed_emails.email_content.executive_snapshot_context.timeline.start_date\",\n\tprospect_vendor: \"$processed_emails.email_content.executive_snapshot_context.parties.prospect\",\n\n\tcommercials_text: {\n\t$let: {\n\tvars: { cms: { $ifNull: [\"$processed_emails.email_content.executive_snapshot_context.commercials\", []] } },\nin: {\n\t$reduce: {\n\t\tinput: \"$$cms\",\n\t\tinitialValue: \"\",\n\t\tin: {\n\t\t\t$concat: [\n\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\"$$this\"\n\t\t\t]\n\t\t}\n\t}\n}\n}\n},\n\nprospect_background: \"$processed_emails.email_content.business_scope_context.prospect_background\",\n\npain_points_text: {\n\t$let: {\n\t\tvars: { pts: { $ifNull: [\"$processed_emails.email_content.business_scope_context.pain_points\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$pts\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nobjectives_text: {\n\t$let: {\n\t\tvars: { obs: { $ifNull: [\"$processed_emails.email_content.business_scope_context.objectives\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$obs\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nprospect_attendees_text: {\n\t$let: {\n\t\tvars: {\n\t\t\tpaAll: {\n\t\t\t\t$reduce: {\n\t\t\t\t\tinput: {\n\t\t\t\t\t\t$map: {\n\t\t\t\t\t\t\tinput: { $ifNull: [\"$processed_emails.email_content.stakeholders_points\", []] },\n\t\t\t\t\t\t\tas: \"sp\",\n\t\t\t\t\t\t\tin: { $ifNull: [\"$$sp.prospect_attendees\", []] }\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\tinitialValue: [],\n\t\t\t\t\tin: { $concatArrays: [\"$$value\", \"$$this\"] }\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$paAll\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this.attendee\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nour_attendees_text: {\n\t$let: {\n\t\tvars: {\n\t\t\toaAll: {\n\t\t\t\t$reduce: {\n\t\t\t\t\tinput: {\n\t\t\t\t\t\t$map: {\n\t\t\t\t\t\t\tinput: { $ifNull: [\"$processed_emails.email_content.stakeholders_points\", []] },\n\t\t\t\t\t\t\tas: \"sp\",\n\t\t\t\t\t\t\tin: { $ifNull: [\"$$sp.our_attendees\", []] }\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\tinitialValue: [],\n\t\t\t\t\tin: { $concatArrays: [\"$$value\", \"$$this\"] }\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$oaAll\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this.attendee\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nuse_cases_text: {\n\t$let: {\n\t\tvars: { ucs: { $ifNull: [\"$processed_emails.email_content.solution_scope_context.use_cases\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$ucs\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\npending_commitments_text: {\n\t$let: {\n\t\tvars: { pcs: { $ifNull: [\"$processed_emails.email_content.solution_scope_context.pending_commitments\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$pcs\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nout_of_scope_text: {\n\t$let: {\n\t\tvars: { oos: { $ifNull: [\"$processed_emails.email_content.solution_scope_context.out_of_scope\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$oos\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\ndeliverables_text: {\n\t$let: {\n\t\tvars: { dvs: { $ifNull: [\"$processed_emails.email_content.solution_scope_context.deliverables\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: {\n\t\t\t\t\t$map: {\n\t\t\t\t\t\tinput: \"$$dvs\",\n\t\t\t\t\t\tas: \"d\",\n\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t{ $ifNull: [\"$$d.description\", \"\"] },\n\t\t\t\t\t\t\t\t\" (Owner: \", { $ifNull: [\"$$d.owner\", \"\"] }, \")\",\n\t\t\t\t\t\t\t\t\" (Timing: \", { $ifNull: [\"$$d.timing\", \"TBD\"] }, \")\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\ntechnical_notes_text: {\n\t$let: {\n\t\tvars: { tns: { $ifNull: [\"$processed_emails.email_content.technical_environment_context.technical_notes\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$tns\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\noverall_duration: \"$processed_emails.email_content.plan_cadence_context.overall_duration\",\n\nphased_plan_text: {\n\t$let: {\n\t\tvars: { pps: { $ifNull: [\"$processed_emails.email_content.plan_cadence_context.phased_plan\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: {\n\t\t\t\t\t$map: {\n\t\t\t\t\t\tinput: \"$$pps\",\n\t\t\t\t\t\tas: \"p\",\n\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t{ $ifNull: [\"$$p.timeframe\", \"\"] },\n\t\t\t\t\t\t\t\t\": \",\n\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\t\t\t\tinput: { $ifNull: [\"$$p.activities\", []] },\n\t\t\t\t\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \", \"] },\n\t\t\t\t\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nprospect_responsibilities_text: {\n\t$let: {\n\t\tvars: { prs: { $ifNull: [\"$processed_emails.email_content.plan_cadence_context.prospect_responsibilities\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$prs\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\ndependencies_text: {\n\t$let: {\n\t\tvars: { deps: { $ifNull: [\"$processed_emails.email_content.plan_cadence_context.dependencies\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$deps\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\ncritical_blockers_text: {\n\t$let: {\n\t\tvars: { cbs: { $ifNull: [\"$processed_emails.email_content.risk_alerts_context.critical_blockers\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$cbs\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\ntop_risks_text: {\n\t$let: {\n\t\tvars: { trs: { $ifNull: [\"$processed_emails.email_content.risk_alerts_context.top_risks\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$trs\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nkpis_text: {\n\t$let: {\n\t\tvars: { kps: { $ifNull: [\"$processed_emails.email_content.success_metrics_context.kpis\", []] } },\n\t\tin: {\n\t\t\t$reduce: {\n\t\t\t\tinput: \"$$kps\",\n\t\t\t\tinitialValue: \"\",\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n},\n\nmeasurement_approach: \"$processed_emails.email_content.success_metrics_context.measurement_approach\",\n\t\t\"tx_consumed\": 1\n}\n}\n],\n  \"cursor\": {}\n}\n",
+            "status": "SUCCESS"
+          }
+        },
+        "smartSubstitution": {
+          "data": true
+        },
+        "updateMany": {
+          "limit": {
+            "data": "SINGLE"
+          },
+          "query": {
+            "data": ""
+          },
+          "update": {
+            "data": ""
+          }
+        }
+      },
+      "paginationType": "NONE",
+      "timeoutInMillisecond": 10000
+    },
+    "confirmBeforeExecute": false,
+    "datasource": {
+      "id": "mongo-auditlogs-prod-us-east-2",
+      "isAutoGenerated": false,
+      "name": "mongo-auditlogs-prod-us-east-2",
+      "pluginId": "mongo-plugin"
+    },
+    "dynamicBindingPathList": [
+      {
+        "key": "formData.aggregate.arrayPipelines.data"
+      }
+    ],
+    "executeOnLoad": true,
+    "name": "sow_logs_qry",
+    "pageId": "Usage Logs",
+    "userSetOnLoad": false
+  }
+}

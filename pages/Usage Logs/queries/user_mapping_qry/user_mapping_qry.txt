@@ -1,0 +1,1 @@
+select user_id, username from product_user_access_mapping puam inner join user_master um on um.id = puam.user_id where puam.is_delete = 0;

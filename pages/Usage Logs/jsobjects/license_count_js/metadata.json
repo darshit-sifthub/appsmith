@@ -1,0 +1,11 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_ea9dcea9-430b-4342-a6d0-d1aa43081d9d",
+  "id": "Usage Logs_license_count_js",
+  "unpublishedCollection": {
+    "name": "license_count_js",
+    "pageId": "Usage Logs",
+    "pluginId": "js-plugin",
+    "pluginType": "JS",
+    "variables": []
+  }
+}

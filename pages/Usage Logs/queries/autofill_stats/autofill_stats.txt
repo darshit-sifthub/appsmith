@@ -1,0 +1,70 @@
+{
+  "aggregate": "activity_center",
+  "pipeline": [
+  {
+    $match: {{ autofill_total_qs_filter_js.getMatchQuery() }}
+  },
+  {
+    $project:
+      {
+        document: "$activity_meta.documentId",
+        id: "$run_id",
+        completed_questions:
+          "$activity_stats.completed",
+        answered_questions:
+          "$activity_stats.answered",
+        unanswered_questions:
+          "$activity_stats.unanswered",
+        total_time: {
+          $divide: [
+            {
+              $subtract: [
+                "$updated_at",
+                "$created_at",
+              ],
+            },
+            1000,
+          ],
+        },
+      },
+  },
+  {
+    $group: {
+      _id: null,
+      totalQuestions: {
+        $sum: "$completed_questions",
+      },
+      totalQuestionsAnswered: {
+        $sum: "$answered_questions",
+      },
+      totalTime: {
+        $sum: "$total_time",
+      },
+      totalRuns: {
+        $sum: 1,
+      },
+      autoFillDocuments: {
+        $addToSet: "$document",
+      },
+    },
+  },
+  {
+    $project: {
+      totalQuestions: "$totalQuestions",
+      totalQuestionsAnswered:
+        "$totalQuestionsAnswered",
+      totalRuns: "$totalRuns",
+      totalDocuments: {
+        $size: "$autoFillDocuments",
+      },
+      averageResponseTime: {
+        $divide: [
+          "$totalTime",
+          "$totalQuestions",
+        ],
+      },
+    },
+  },
+],
+  "cursor": {}
+}

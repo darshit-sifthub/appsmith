@@ -1,0 +1,45 @@
+{
+  "aggregate": "data_collection",
+  "pipeline": [
+  {
+    $match: {{ qna_filter_js.getMatchQuery() }}
+  },
+  {
+    $project:
+      {
+        created_date: {
+          $dateToString: {
+            format: "%Y-%m-%d",
+            date: {
+              $toDate: "$created_at",
+            },
+          },
+        },
+        client_id: 1,
+        created_by: 1,
+      },
+  },
+  {
+    $group:
+      {
+        _id: {
+          created_dt: "$created_date",
+          created_by: "$created_by",
+          client_id: "$client_id",
+        },
+        total: {
+          $sum: 1,
+        },
+      },
+  },
+  {
+    $project: {
+      created: "$_id.created_dt",
+      clientId: "$_id.client_id",
+      userId: "$_id.created_by",
+      total: "$total",
+    },
+  },
+],
+  "cursor": {}
+}

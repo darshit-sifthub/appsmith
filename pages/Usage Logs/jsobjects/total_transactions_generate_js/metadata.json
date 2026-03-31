@@ -1,0 +1,11 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_f86df4b4-838b-48f2-bc81-9a69fdd5f3b5",
+  "id": "Usage Logs_total_transactions_generate_js",
+  "unpublishedCollection": {
+    "name": "total_transactions_generate_js",
+    "pageId": "Usage Logs",
+    "pluginId": "js-plugin",
+    "pluginType": "JS",
+    "variables": []
+  }
+}

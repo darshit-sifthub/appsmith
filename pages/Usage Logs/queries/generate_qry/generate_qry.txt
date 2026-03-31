@@ -1,0 +1,69 @@
+{
+  "aggregate": "generate_audit_log",
+  "pipeline": [
+  {
+    $match: {{ generate_filter_js.getMatchQuery() }},
+    },
+  {
+    $addFields: {
+      parsedDate: {
+        $dateFromString: {
+          dateString: "$created",
+        },
+      },
+      normalizedAnswers: {
+        $ifNull: [
+          {
+            $ifNull: ["$response.answers", []],
+          },
+          [],
+        ],
+      },
+    },
+  },
+  {
+    $group: {
+      _id: {
+        clientId: "$clientId",
+        userId: "$userId",
+        date: {
+          $dateToString: {
+            format: "%Y-%m-%d",
+            date: "$parsedDate",
+          },
+        },
+      },
+      total: {
+        $sum: 1,
+      },
+      answered: {
+        $sum: {
+          $cond: [
+            {
+              $gt: [
+                {
+                  $size: "$normalizedAnswers",
+                },
+                0,
+              ],
+            },
+            1,
+            0,
+          ],
+        },
+      },
+    },
+  },
+  {
+    $project:
+      {
+        date: "$_id.date",
+        clientId: "$_id.clientId",
+        userId: "$_id.userId",
+        total: "$total",
+        answered: "$answered",
+      },
+  },
+],
+  "cursor": {}
+}

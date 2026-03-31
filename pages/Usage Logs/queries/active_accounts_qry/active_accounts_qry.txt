@@ -1,0 +1,13 @@
+SELECT client_master.name, client_master.start_date, client_master.end_date, client_master.expire_at, CASE 
+        WHEN client_master.expire_at > now() AND account_type = '' THEN 'Active'
+        WHEN UPPER(client_master.account_type) = 'FREE_TRIAL' THEN
+            CASE 
+                WHEN client_master.expire_at >= now() THEN 'Free trial'
+                ELSE 'Free trial expired'
+            END
+        ELSE
+            CASE 
+                WHEN client_master.expire_at >= now() THEN 'Active'
+                ELSE 'Expired'
+            END
+    END AS status, `spm`.`plan_name` as subscription_name, client_master.account_type FROM client_master left join subscription_plan_master spm on spm.id = client_master.subscription_id where  client_master.is_active= 1 and client_master.is_delete= 0;

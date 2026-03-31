@@ -1,0 +1,108 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_c00b5288-527c-4737-a298-6bb83cdd9609",
+  "id": "Usage Logs_sales_to_post_sales_logs_qry",
+  "pluginId": "mongo-plugin",
+  "pluginType": "DB",
+  "unpublishedAction": {
+    "actionConfiguration": {
+      "encodeParamsToggle": true,
+      "formData": {
+        "aggregate": {
+          "arrayPipelines": {
+            "data": "[\n  {\n    $match: {\n      \"workflow_name\": \"SALES_TO_POST_SALES_WORKFLOW\"\n    }\n  },\n  {\n    $match: {{ workflow_logs_filter_js.getMatchQuery() }}\n  },\n  { $sort: { started_at: -1 } },\n  {\n    $project: {\n      _id: 0,\n      created_at: 1,\n      event_subject: 1,\n      client_id: 1,\n      workflow_name: 1,\n      attendee_emails: 1,\n      customer_name: \"$processed_emails.email_content.customer_name\",\n      call_name: \"$processed_emails.email_content.call_name\",\n      call_date: \"$processed_emails.email_content.call_date\",\n\n      prospect_attendees_text: {\n        $let: {\n          vars: {\n            paAll: {\n              $reduce: {\n                input: {\n                  $map: {\n                    input: { $ifNull: [\"$processed_emails.email_content.stakeholders_points\", []] },\n                    as: \"sp\",\n                    in: { $ifNull: [\"$$sp.stakeholders\", []] }\n                  }\n                },\n                initialValue: [],\n                in: { $concatArrays: [\"$$value\", \"$$this\"] }\n              }\n            }\n          },\n          in: {\n            $reduce: {\n              input: \"$$paAll\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this.attendee\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      objectives_text: {\n        $let: {\n          vars: { obs: { $ifNull: [\"$processed_emails.email_content.business_scope_context.objectives\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$obs\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      pain_points_text: {\n        $let: {\n          vars: { pts: { $ifNull: [\"$processed_emails.email_content.business_scope_context.pain_points\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$pts\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      success_metrics_text: {\n        $let: {\n          vars: { sms: { $ifNull: [\"$processed_emails.email_content.business_scope_context.success_metrics\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$sms\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      use_cases_text: {\n        $let: {\n          vars: { ucs: { $ifNull: [\"$processed_emails.email_content.solution_scope_context.use_cases\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$ucs\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      must_haves_text: {\n        $let: {\n          vars: { mhs: { $ifNull: [\"$processed_emails.email_content.solution_scope_context.must_haves\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$mhs\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      assumptions_text: {\n        $let: {\n          vars: { asm: { $ifNull: [\"$processed_emails.email_content.solution_scope_context.assumptions\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$asm\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      systems_text: {\n        $let: {\n          vars: { sys: { $ifNull: [\"$processed_emails.email_content.technical_environment_context.systems_and_integrations\", []] } },\n          in: {\n            $reduce: {\n              input: {\n                $map: {\n                  input: \"$$sys\",\n                  as: \"s\",\n                  in: {\n                    $concat: [\n                      { $ifNull: [\"$$s.system\", \"\"] },\n                      \" (\", { $ifNull: [\"$$s.integration_method\", \"\"] }, \")\"\n                    ]\n                  }\n                }\n              },\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      technical_notes_text: {\n        $let: {\n          vars: { tns: { $ifNull: [\"$processed_emails.email_content.technical_environment_context.technical_notes\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$tns\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      primary_contact_name: \"$processed_emails.email_content.plan_cadence_context.primary_contact.name\",\n      primary_contact_role: \"$processed_emails.email_content.plan_cadence_context.primary_contact.role\",\n\n      next_steps_text: {\n        $let: {\n          vars: { nss: { $ifNull: [\"$processed_emails.email_content.plan_cadence_context.immediate_next_steps\", []] } },\n          in: {\n            $reduce: {\n              input: {\n                $map: {\n                  input: \"$$nss\",\n                  as: \"ns\",\n                  in: {\n                    $concat: [\n                      { $ifNull: [\"$$ns.timeframe\", \"\"] },\n                      \": \",\n                      {\n                        $reduce: {\n                          input: { $ifNull: [\"$$ns.actions\", []] },\n                          initialValue: \"\",\n                          in: {\n                            $concat: [\n                              { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \", \"] },\n                              \"$$this.action\",\n                              \" (\", { $ifNull: [\"$$this.owner\", \"\"] }, \")\"\n                            ]\n                          }\n                        }\n                      }\n                    ]\n                  }\n                }\n              },\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      critical_open_items_text: {\n        $let: {\n          vars: { coi: { $ifNull: [\"$processed_emails.email_content.plan_cadence_context.critical_open_items\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$coi\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      commitments_fulfilled_text: {\n        $let: {\n          vars: { cf: { $ifNull: [\"$processed_emails.email_content.plan_cadence_context.commitments.fulfilled\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$cf\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      commitments_pending_text: {\n        $let: {\n          vars: { cp: { $ifNull: [\"$processed_emails.email_content.plan_cadence_context.commitments.pending\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$cp\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\t\t\"tx_consumed\": 1\n    }\n  }\n]"
+          },
+          "limit": {
+            "data": "2000"
+          }
+        },
+        "collection": {
+          "data": "ingestion_workflow_logs"
+        },
+        "command": {
+          "data": "AGGREGATE"
+        },
+        "count": {
+          "query": {
+            "data": ""
+          }
+        },
+        "delete": {
+          "limit": {
+            "data": "SINGLE"
+          },
+          "query": {
+            "data": ""
+          }
+        },
+        "distinct": {
+          "key": {
+            "data": ""
+          },
+          "query": {
+            "data": ""
+          }
+        },
+        "find": {
+          "limit": {
+            "data": ""
+          },
+          "projection": {
+            "data": ""
+          },
+          "query": {
+            "data": ""
+          },
+          "skip": {
+            "data": ""
+          },
+          "sort": {
+            "data": ""
+          }
+        },
+        "insert": {
+          "documents": {
+            "data": ""
+          }
+        },
+        "misc": {
+          "formToNativeQuery": {
+            "data": "{\n  \"aggregate\": \"ingestion_workflow_logs\",\n  \"pipeline\": [\n  {\n    $match: {\n      \"workflow_name\": \"SALES_TO_POST_SALES_WORKFLOW\"\n    }\n  },\n  {\n    $match: {{ workflow_logs_filter_js.getMatchQuery() }}\n  },\n  { $sort: { started_at: -1 } },\n  {\n    $project: {\n      _id: 0,\n      created_at: 1,\n      event_subject: 1,\n      client_id: 1,\n      workflow_name: 1,\n      attendee_emails: 1,\n      customer_name: \"$processed_emails.email_content.customer_name\",\n      call_name: \"$processed_emails.email_content.call_name\",\n      call_date: \"$processed_emails.email_content.call_date\",\n\n      prospect_attendees_text: {\n        $let: {\n          vars: {\n            paAll: {\n              $reduce: {\n                input: {\n                  $map: {\n                    input: { $ifNull: [\"$processed_emails.email_content.stakeholders_points\", []] },\n                    as: \"sp\",\n                    in: { $ifNull: [\"$$sp.stakeholders\", []] }\n                  }\n                },\n                initialValue: [],\n                in: { $concatArrays: [\"$$value\", \"$$this\"] }\n              }\n            }\n          },\n          in: {\n            $reduce: {\n              input: \"$$paAll\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this.attendee\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      objectives_text: {\n        $let: {\n          vars: { obs: { $ifNull: [\"$processed_emails.email_content.business_scope_context.objectives\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$obs\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      pain_points_text: {\n        $let: {\n          vars: { pts: { $ifNull: [\"$processed_emails.email_content.business_scope_context.pain_points\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$pts\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      success_metrics_text: {\n        $let: {\n          vars: { sms: { $ifNull: [\"$processed_emails.email_content.business_scope_context.success_metrics\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$sms\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      use_cases_text: {\n        $let: {\n          vars: { ucs: { $ifNull: [\"$processed_emails.email_content.solution_scope_context.use_cases\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$ucs\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      must_haves_text: {\n        $let: {\n          vars: { mhs: { $ifNull: [\"$processed_emails.email_content.solution_scope_context.must_haves\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$mhs\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      assumptions_text: {\n        $let: {\n          vars: { asm: { $ifNull: [\"$processed_emails.email_content.solution_scope_context.assumptions\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$asm\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      systems_text: {\n        $let: {\n          vars: { sys: { $ifNull: [\"$processed_emails.email_content.technical_environment_context.systems_and_integrations\", []] } },\n          in: {\n            $reduce: {\n              input: {\n                $map: {\n                  input: \"$$sys\",\n                  as: \"s\",\n                  in: {\n                    $concat: [\n                      { $ifNull: [\"$$s.system\", \"\"] },\n                      \" (\", { $ifNull: [\"$$s.integration_method\", \"\"] }, \")\"\n                    ]\n                  }\n                }\n              },\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      technical_notes_text: {\n        $let: {\n          vars: { tns: { $ifNull: [\"$processed_emails.email_content.technical_environment_context.technical_notes\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$tns\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      primary_contact_name: \"$processed_emails.email_content.plan_cadence_context.primary_contact.name\",\n      primary_contact_role: \"$processed_emails.email_content.plan_cadence_context.primary_contact.role\",\n\n      next_steps_text: {\n        $let: {\n          vars: { nss: { $ifNull: [\"$processed_emails.email_content.plan_cadence_context.immediate_next_steps\", []] } },\n          in: {\n            $reduce: {\n              input: {\n                $map: {\n                  input: \"$$nss\",\n                  as: \"ns\",\n                  in: {\n                    $concat: [\n                      { $ifNull: [\"$$ns.timeframe\", \"\"] },\n                      \": \",\n                      {\n                        $reduce: {\n                          input: { $ifNull: [\"$$ns.actions\", []] },\n                          initialValue: \"\",\n                          in: {\n                            $concat: [\n                              { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \", \"] },\n                              \"$$this.action\",\n                              \" (\", { $ifNull: [\"$$this.owner\", \"\"] }, \")\"\n                            ]\n                          }\n                        }\n                      }\n                    ]\n                  }\n                }\n              },\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      critical_open_items_text: {\n        $let: {\n          vars: { coi: { $ifNull: [\"$processed_emails.email_content.plan_cadence_context.critical_open_items\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$coi\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      commitments_fulfilled_text: {\n        $let: {\n          vars: { cf: { $ifNull: [\"$processed_emails.email_content.plan_cadence_context.commitments.fulfilled\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$cf\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\n      commitments_pending_text: {\n        $let: {\n          vars: { cp: { $ifNull: [\"$processed_emails.email_content.plan_cadence_context.commitments.pending\", []] } },\n          in: {\n            $reduce: {\n              input: \"$$cp\",\n              initialValue: \"\",\n              in: {\n                $concat: [\n                  { $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n                  \"$$this\"\n                ]\n              }\n            }\n          }\n        }\n      },\n\t\t\"tx_consumed\": 1\n    }\n  }\n],\n  \"cursor\": {}\n}\n",
+            "status": "SUCCESS"
+          }
+        },
+        "smartSubstitution": {
+          "data": true
+        },
+        "updateMany": {
+          "limit": {
+            "data": "SINGLE"
+          },
+          "query": {
+            "data": ""
+          },
+          "update": {
+            "data": ""
+          }
+        }
+      },
+      "paginationType": "NONE",
+      "timeoutInMillisecond": 10000
+    },
+    "confirmBeforeExecute": false,
+    "datasource": {
+      "id": "mongo-auditlogs-prod-us-east-2",
+      "isAutoGenerated": false,
+      "name": "mongo-auditlogs-prod-us-east-2",
+      "pluginId": "mongo-plugin"
+    },
+    "dynamicBindingPathList": [
+      {
+        "key": "formData.aggregate.arrayPipelines.data"
+      }
+    ],
+    "executeOnLoad": true,
+    "name": "sales_to_post_sales_logs_qry",
+    "pageId": "Usage Logs",
+    "userSetOnLoad": false
+  }
+}

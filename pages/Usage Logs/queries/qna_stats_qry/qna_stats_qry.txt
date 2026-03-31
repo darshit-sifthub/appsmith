@@ -1,0 +1,4 @@
+{
+  "count": "data_collection",
+  "query": { client_id: 10, created_by: 41, active: true, deleted: false},
+}

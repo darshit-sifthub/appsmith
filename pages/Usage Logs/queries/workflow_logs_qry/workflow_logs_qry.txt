@@ -1,0 +1,273 @@
+{
+  "aggregate": "ingestion_workflow_logs",
+  "pipeline": [
+	{
+		$match: {{ workflow_logs_filter_js.getMatchQuery() }},
+	},
+	{ $sort: { _id: -1 } },
+	{
+		$project: {
+			_id: 0,
+			created_at: 1, 
+			event_subject: 1,
+			client_id: 1,
+			workflow_name: 1,
+			attendee_emails: 1,
+			customer_name: "$processed_emails.email_content.customer_name",
+			call_name: "$processed_emails.email_content.call_name",
+			call_date: "$processed_emails.email_content.call_date",
+			executive_snapshot: "$processed_emails.email_content.executive_snapshot_description",
+
+			prospect_attendees_text: {
+				$let: {
+					vars: {
+						paAll: {
+							$reduce: {
+								input: {
+									$map: {
+										input: { $ifNull: ["$processed_emails.email_content.stakeholders_points", []] },
+										as: "sp",
+										in: { $ifNull: ["$$sp.prospect_attendees", []] }
+									}
+								},
+								initialValue: [],
+								in: { $concatArrays: ["$$value", "$$this"] }
+							}
+						}
+					},
+					in: {
+						$reduce: {
+							input: "$$paAll",
+							initialValue: "",
+							in: {
+								$concat: [
+									{ $cond: [{ $eq: ["$$value", ""] }, "", " | "] },
+									"$$this.attendee"
+								]
+							}
+						}
+					}
+				}
+			},
+
+			our_attendees_text: {
+				$let: {
+					vars: {
+						oaAll: {
+							$reduce: {
+								input: {
+									$map: {
+										input: { $ifNull: ["$processed_emails.email_content.stakeholders_points", []] },
+										as: "sp",
+										in: { $ifNull: ["$$sp.our_attendees", []] }
+									}
+								},
+								initialValue: [],
+								in: { $concatArrays: ["$$value", "$$this"] }
+							}
+						}
+					},
+					in: {
+						$reduce: {
+							input: "$$oaAll",
+							initialValue: "",
+							in: {
+								$concat: [
+									{ $cond: [{ $eq: ["$$value", ""] }, "", " | "] },
+									"$$this.attendee"
+								]
+							}
+						}
+					}
+				}
+			},
+
+			pain_points_text: {
+				$let: {
+					vars: { pts: { $ifNull: ["$processed_emails.email_content.pain_points_points", []] } },
+					in: {
+						$concat: [
+							{ $ifNull: ["$processed_emails.email_content.pain_points_description", ""] },
+							{ $cond: [{ $gt: [{ $size: "$$pts" }, 0] }, " | ", ""] },
+							{
+								$reduce: {
+									input: "$$pts",
+									initialValue: "",
+									in: {
+										$concat: [
+											{ $cond: [{ $eq: ["$$value", ""] }, "", " | "] },
+											"$$this"
+										]
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+
+			competitive_intel_text: {
+				$let: {
+					vars: { cps: { $ifNull: ["$processed_emails.email_content.competitive_intels_points", []] } },
+					in: {
+						$concat: [
+							{ $ifNull: ["$processed_emails.email_content.competitive_intels_description", ""] },
+							{ $cond: [{ $gt: [{ $size: "$$cps" }, 0] }, " | ", ""] },
+							{
+								$reduce: {
+									input: "$$cps",
+									initialValue: "",
+									in: {
+										$concat: [
+											{ $cond: [{ $eq: ["$$value", ""] }, "", " | "] },
+											"$$this"
+										]
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+
+			buying_signal_text: {
+				$let: {
+					vars: { pis: { $ifNull: ["$processed_emails.email_content.positive_intent_points", []] } },
+					in: {
+						$concat: [
+							{ $ifNull: ["$processed_emails.email_content.buying_signal_description", ""] },
+							{ $cond: [{ $gt: [{ $size: "$$pis" }, 0] }, " | ", ""] },
+							{
+								$reduce: {
+									input: "$$pis",
+									initialValue: "",
+									in: {
+										$concat: [
+											{ $cond: [{ $eq: ["$$value", ""] }, "", " | "] },
+											"$$this"
+										]
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+
+			commitment_tracking_text: {
+				$let: {
+					vars: { ctp: { $ifNull: ["$processed_emails.email_content.commitment_tracking_points", []] } },
+					in: {
+						$concat: [
+							{ $ifNull: ["$processed_emails.email_content.commitment_tracking_description", ""] },
+							{ $cond: [{ $gt: [{ $size: "$$ctp" }, 0] }, " | ", ""] },
+							{
+								$reduce: {
+									input: "$$ctp",
+									initialValue: "",
+									in: {
+										$concat: [
+											{ $cond: [{ $eq: ["$$value", ""] }, "", " | "] },
+											"$$this"
+										]
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+
+			objections_text: {
+				$let: {
+					vars: { ops: { $ifNull: ["$processed_emails.email_content.objections_points", []] } },
+					in: {
+						$concat: [
+							{ $ifNull: ["$processed_emails.email_content.objections_description", ""] },
+							{ $cond: [{ $gt: [{ $size: "$$ops" }, 0] }, " | ", ""] },
+							{
+								$reduce: {
+									input: {
+										$map: {
+											input: "$$ops",
+											as: "p",
+											in: {
+												$concat: [
+													"Objection: ", { $ifNull: ["$$p.objection", ""] },
+													" Counter: ", { $ifNull: ["$$p.counter", ""] },
+													" Suggested: ", { $ifNull: ["$$p.suggested_counter", ""] }
+												]
+											}
+										}
+									},
+									initialValue: "",
+									in: {
+										$concat: [
+											{ $cond: [{ $eq: ["$$value", ""] }, "", " | "] },
+											"$$this"
+										]
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+
+			similar_deals: {
+				$let: {
+					vars: { sps: { $ifNull: ["$processed_emails.email_content.similar_deals_points", []] } },
+					in: {
+						$concat: [
+							{ $ifNull: ["$processed_emails.email_content.similar_deals_description", ""] },
+							{ $cond: [{ $gt: [{ $size: "$$sps" }, 0] }, " | ", ""] },
+							{
+								$reduce: {
+									input: {
+										$map: {
+											input: "$$sps",
+											as: "p",
+											in: {
+												$concat: [
+													"Objection: ", { $ifNull: ["$$p.objection", ""] },
+													" Counter: ", { $ifNull: ["$$p.counter", ""] }
+												]
+											}
+										}
+									},
+									initialValue: "",
+									in: {
+										$concat: [
+											{ $cond: [{ $eq: ["$$value", ""] }, "", " | "] },
+											"$$this"
+										]
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+
+			next_steps_text: {
+				$let: {
+					vars: { ns: { $ifNull: ["$processed_emails.email_content.next_steps_points", []] } },
+					in: {
+						$reduce: {
+							input: { $map: { input: "$$ns", as: "p", in: "$$p.text" } },
+							initialValue: "",
+							in: {
+								$concat: [
+									{ $cond: [{ $eq: ["$$value", ""] }, "", " | "] },
+									"$$this"
+								]
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+],
+  "cursor": {}
+}

@@ -1,0 +1,3 @@
+SELECT username, client_id, created_dt from signup_user where client_id is not null and is_active = 1 and is_delete = 0 and is_activated= 0
+{{ pending_activation_filter.getMatchQuery() }}
+order by created_dt desc;

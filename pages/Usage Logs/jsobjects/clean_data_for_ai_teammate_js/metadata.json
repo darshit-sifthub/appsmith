@@ -1,0 +1,11 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_38148fc9-efc3-4a8c-a6a6-6c407a22c5fb",
+  "id": "Usage Logs_clean_data_for_ai_teammate_js",
+  "unpublishedCollection": {
+    "name": "clean_data_for_ai_teammate_js",
+    "pageId": "Usage Logs",
+    "pluginId": "js-plugin",
+    "pluginType": "JS",
+    "variables": []
+  }
+}

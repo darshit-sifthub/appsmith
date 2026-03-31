@@ -1,0 +1,117 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_246dd3a5-90ed-48f5-9360-e1609ae8af2b",
+  "id": "Usage Logs_ai_teammate_rfp_qry",
+  "pluginId": "mongo-plugin",
+  "pluginType": "DB",
+  "unpublishedAction": {
+    "actionConfiguration": {
+      "encodeParamsToggle": true,
+      "formData": {
+        "aggregate": {
+          "arrayPipelines": {
+            "data": "[\n  { \n    \"$match\": {{ ai_teammate_rfp_betajs.getMatchQuery() }} \n  },\n  {\n    \"$project\": {\n      \"created_at\": 1,\n      \"client_id\": 1,\n      \"user_id\": 1,\n      \"event_id\": 1,\n      \"conversation_id\": 1,\n      \"platform\": 1,\n      \"conversation_counter\": 1,\n      \"status\": 1,\n      \"total_time_seconds\": 1,\n      \"preference\": 1,\n      \"mode\": 1,\n      \"executed_intents\": 1,\n      \"source\": 1,\n      \"tx_consumed\": 1,\n      // Path Aliasing\n      \"originalUserInput\": \"$request.originalUserInput\",\n      \"responseText\": \"$response.response.text\",\n      \"sourceNames\": \"$response.response.sources.name\",\n      \"webSourceNames\": \"$response.response.webSources.name\",\n      \"webSourceUrls\": \"$response.response.webSources.url\",\n      \n      // The \"Sanitizer\" for Regex, Arrays, and Nulls\n      \"source_analysis_prompt\": {\n        \"$cond\": {\n          \"if\": { \"$isArray\": \"$source_analysis_prompt\" },\n          \"then\": { \n            \"$reduce\": {\n              \"input\": \"$source_analysis_prompt\",\n              \"initialValue\": \"\",\n              \"in\": { \"$concat\": [\"$$value\", { \"$cond\": [{ \"$eq\": [\"$$value\", \"\"] }, \"\", \" \"] }, { \"$toString\": \"$$this\" }] }\n            }\n          },\n          \"else\": { \"$ifNull\": [{ \"$toString\": \"$source_analysis_prompt\" }, \"\"] }\n        }\n      },\n      \"answerability_prompts\": {\n        \"$cond\": {\n          \"if\": { \"$isArray\": \"$answerability_prompts\" },\n          \"then\": { \n            \"$reduce\": {\n              \"input\": \"$answerability_prompts\",\n              \"initialValue\": \"\",\n              \"in\": { \"$concat\": [\"$$value\", { \"$cond\": [{ \"$eq\": [\"$$value\", \"\"] }, \"\", \" \"] }, { \"$toString\": \"$$this\" }] }\n            }\n          },\n          \"else\": { \"$ifNull\": [{ \"$toString\": \"$answerability_prompts\" }, \"\"] }\n        }\n      }\n    }\n  },\n  { \"$limit\": 2000 }\n]"
+          },
+          "limit": {
+            "data": "2000"
+          }
+        },
+        "body": {
+          "data": "{\n  \"find\": \"conversation_history\",\n  \"filter\": {\n  \"created_at\": {\n    \"$gte\": 1771180200000,\n    \"$lte\": 1771399059661\n  },\n  \"source\": {\n    \"$in\": [\n      \"AUTOFILL_GENERATE\",\n      \"ANSWER_GENERATE\"\n    ]\n  }\n},\n  \"skip\": 0,\n  \"limit\": 2000,\n  \"batchSize\": 2000\n}\n"
+        },
+        "collection": {
+          "data": "conversation_history"
+        },
+        "command": {
+          "data": "FIND"
+        },
+        "count": {
+          "query": {
+            "data": "{{ ai_teammate_rfp_betajs.getMatchQuery() }}"
+          }
+        },
+        "delete": {
+          "limit": {
+            "data": "SINGLE"
+          },
+          "query": {
+            "data": ""
+          }
+        },
+        "distinct": {
+          "key": {
+            "data": ""
+          },
+          "query": {
+            "data": ""
+          }
+        },
+        "find": {
+          "limit": {
+            "data": "2000"
+          },
+          "projection": {
+            "data": "{\n  \"created_at\": 1,\n  \"client_id\": 1,\n  \"user_id\": 1,\n  \"event_id\": 1,\n  \"conversation_id\": 1,\n  \"request.originalUserInput\": 1,\n  \"platform\": 1,\n  \"response.response.sources.name\": 1,\n  \"response.response.webSources.name\": 1,\n  \"response.response.text\": 1,\n  \"conversation_counter\": 1,\n  \"status\": 1,\n  \"total_time_seconds\": 1,\n  \"preference\": 1,\n  \"mode\": 1,\n  \"executed_intents\": 1,\n  \"response.response.webSources.url\": 1,\n  \"source\": 1,\n  \"tx_consumed\": 1,\n  \"answerability_prompts.response\": 1 \n}"
+          },
+          "query": {
+            "data": "{{ ai_teammate_rfp_betajs.getMatchQuery() }}"
+          },
+          "skip": {
+            "data": ""
+          },
+          "sort": {
+            "data": "{ created_at: -1 }"
+          }
+        },
+        "insert": {
+          "documents": {
+            "data": ""
+          }
+        },
+        "misc": {
+          "formToNativeQuery": {
+            "data": "{\n  \"find\": \"conversation_history\",\n  \"filter\": {\n  \"created_at\": {\n    \"$gte\": 1771180200000,\n    \"$lte\": 1771399059661\n  },\n  \"source\": {\n    \"$in\": [\n      \"AUTOFILL_GENERATE\",\n      \"ANSWER_GENERATE\"\n    ]\n  }\n},\n  \"skip\": 0,\n  \"limit\": 2000,\n  \"batchSize\": 2000\n}\n",
+            "status": "SUCCESS"
+          }
+        },
+        "smartSubstitution": {
+          "data": true
+        },
+        "updateMany": {
+          "limit": {
+            "data": "SINGLE"
+          },
+          "query": {
+            "data": ""
+          },
+          "update": {
+            "data": ""
+          }
+        }
+      },
+      "paginationType": "NONE",
+      "timeoutInMillisecond": 10000
+    },
+    "confirmBeforeExecute": false,
+    "datasource": {
+      "id": "mongo-products-prod-us-east-2",
+      "isAutoGenerated": false,
+      "name": "mongo-products-prod-us-east-2",
+      "pluginId": "mongo-plugin"
+    },
+    "dynamicBindingPathList": [
+      {
+        "key": "formData.find.query.data"
+      },
+      {
+        "key": "formData.count.query.data"
+      },
+      {
+        "key": "formData.aggregate.arrayPipelines.data"
+      }
+    ],
+    "executeOnLoad": false,
+    "name": "ai_teammate_rfp_qry",
+    "pageId": "Usage Logs",
+    "userSetOnLoad": true
+  }
+}

@@ -1,0 +1,4 @@
+SELECT count(1) as total_documents, client_id , created_by, max(DATE(created_dt)) as last_uploaded from content_library_files clf
+{{ active_documents_filter_js.getMatchQuery() }}
+group by client_id ,
+created_by order by created_dt desc;

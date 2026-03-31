@@ -1,0 +1,82 @@
+{
+  "accentColor": "{{appsmith.theme.colors.primaryColor}}",
+  "animateLoading": true,
+  "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
+  "bottomRow": 4,
+  "boxShadow": "none",
+  "closeOnSelection": true,
+  "dateFormat": "YYYY-MM-DD HH:mm",
+  "datePickerType": "DATE_PICKER",
+  "defaultDate": "{{ (() => {\n    const currentDate = new Date();\n    return currentDate.toISOString();\n})() }}",
+  "dynamicBindingPathList": [
+    {
+      "key": "accentColor"
+    },
+    {
+      "key": "borderRadius"
+    },
+    {
+      "key": "defaultDate"
+    },
+    {
+      "key": "maxDate"
+    },
+    {
+      "key": "minDate"
+    },
+    {
+      "key": "isDisabled"
+    }
+  ],
+  "dynamicHeight": "FIXED",
+  "dynamicPropertyPathList": [
+    {
+      "key": "defaultDate"
+    },
+    {
+      "key": "minDate"
+    },
+    {
+      "key": "maxDate"
+    },
+    {
+      "key": "isDisabled"
+    }
+  ],
+  "dynamicTriggerPathList": [],
+  "firstDayOfWeek": 0,
+  "isDisabled": "{{ main_tab.selectedTab === \"Knowledge\" && knowledge_tab.selectedTab !== \"QnA\"  || (main_tab.selectedTab === \"Key numbers\" && key_numbers_tab.selectedTab === \"Licenses\") }}",
+  "isLoading": false,
+  "isRequired": true,
+  "isVisible": true,
+  "key": "8i8l8um06u",
+  "label": "End Date",
+  "labelAlignment": "left",
+  "labelPosition": "Left",
+  "labelTextSize": "0.875rem",
+  "labelWidth": "4",
+  "leftColumn": 12,
+  "maxDate": "{{ moment().toISOString() }}",
+  "maxDynamicHeight": 9000,
+  "minDate": "{{ moment().subtract(15, 'months').startOf('month').format('YYYY-MM-DD') }}",
+  "minDynamicHeight": 4,
+  "minWidth": 450,
+  "mobileBottomRow": 7,
+  "mobileLeftColumn": 0,
+  "mobileRightColumn": 7,
+  "mobileTopRow": 0,
+  "needsErrorInfo": false,
+  "parentColumnSpace": 13.875,
+  "parentId": "19y70nfawm",
+  "parentRowSpace": 10,
+  "renderMode": "CANVAS",
+  "responsiveBehavior": "fill",
+  "rightColumn": 24,
+  "shortcuts": true,
+  "timePrecision": "second",
+  "topRow": 0,
+  "type": "DATE_PICKER_WIDGET2",
+  "version": 2,
+  "widgetId": "s5zxyutxhv",
+  "widgetName": "end_date"
+}

@@ -1,0 +1,16 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_aefd7f97-c2ed-4ab2-96f2-023b6654d3e0",
+  "id": "Usage Logs_user_mapping_js",
+  "unpublishedCollection": {
+    "name": "user_mapping_js",
+    "pageId": "Usage Logs",
+    "pluginId": "js-plugin",
+    "pluginType": "JS",
+    "variables": [
+      {
+        "name": "userMapping",
+        "value": "[]"
+      }
+    ]
+  }
+}

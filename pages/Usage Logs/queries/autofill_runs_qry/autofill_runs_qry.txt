@@ -1,0 +1,97 @@
+{
+  "aggregate": "activity_center",
+  "pipeline": [
+  {
+    $match:
+      {
+        client_id: 2,
+        created_by: 8,
+        activity_type: "AUTOFILL",
+        status: "COMPLETED",
+        created_at: {
+          $gte: 1735751702000,
+          $lte: 1737047716000,
+        },
+      },
+  },
+  {
+    $project:
+      {
+        client_id: 1,
+        created_by: 1,
+        document: "$activity_meta.documentId",
+        id: "$run_id",
+        created_date: {
+          $dateToString: {
+            format: "%Y-%m-%d",
+            date: {
+              $toDate: "$created_at",
+            },
+          },
+        },
+        completed_questions:
+          "$activity_stats.completed",
+        answered_questions:
+          "$activity_stats.answered",
+        unanswered_questions:
+          "$activity_stats.unanswered",
+        total_time: {
+          $divide: [
+            {
+              $subtract: [
+                "$updated_at",
+                "$created_at",
+              ],
+            },
+            1000,
+          ],
+        },
+      },
+  },
+  {
+    $group: {
+      _id: {
+        created_date: "$created_date",
+        created_by: "$created_by",
+        client_id: "$client_id",
+      },
+      totalQuestions: {
+        $sum: "$completed_questions",
+      },
+      totalQuestionsAnswered: {
+        $sum: "$answered_questions",
+      },
+      totalTime: {
+        $sum: "$total_time",
+      },
+      totalRuns: {
+        $sum: 1,
+      },
+      autoFillDocuments: {
+        $addToSet: "$document",
+      },
+    },
+  },
+  {
+    $project: {
+      created: "$_id.created_dt",
+      clientId: "$_id.clientId",
+      userId: "$_id.userId",
+      totalQuestions: "$totalQuestions",
+      totalQuestionsAnswered:
+        "$totalQuestionsAnswered",
+      totalRuns: "$totalRuns",
+      totalDocuments: {
+        $size: "$autoFillDocuments",
+      },
+      averageResponseTime: {
+        $divide: [
+          "$totalTime",
+          "$totalQuestions",
+        ],
+      },
+    },
+  },
+],
+  "cursor": {}
+}

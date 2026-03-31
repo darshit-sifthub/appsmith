@@ -1,0 +1,11 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_8e6efae4-c9be-4b63-9ec2-f796913a8afc",
+  "id": "Usage Logs_autofill_stats_js",
+  "unpublishedCollection": {
+    "name": "autofill_stats_js",
+    "pageId": "Usage Logs",
+    "pluginId": "js-plugin",
+    "pluginType": "JS",
+    "variables": []
+  }
+}

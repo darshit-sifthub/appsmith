@@ -1,0 +1,1 @@
+select guid, name from prod.client_master cm ;

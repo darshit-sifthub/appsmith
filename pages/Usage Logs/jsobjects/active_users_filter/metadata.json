@@ -1,0 +1,11 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_00462db1-77dd-47ce-aa6b-036e4eeac9cf",
+  "id": "Usage Logs_active_users_filter",
+  "unpublishedCollection": {
+    "name": "active_users_filter",
+    "pageId": "Usage Logs",
+    "pluginId": "js-plugin",
+    "pluginType": "JS",
+    "variables": []
+  }
+}

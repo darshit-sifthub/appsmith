@@ -1,0 +1,5 @@
+{
+  "find": "workflow_summaries",
+  "limit": 10,
+  "batchSize": 10
+}

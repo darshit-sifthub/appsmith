@@ -1,0 +1,109 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_fdfe8dfe-bf2c-4757-a99a-4bd64b3545eb",
+  "id": "Usage Logs_autofill_runs_qry",
+  "pluginId": "mongo-plugin",
+  "pluginType": "DB",
+  "unpublishedAction": {
+    "actionConfiguration": {
+      "body": "{\n  \"aggregate\": \"activity_center\",\n  \"pipeline\": [\n  {\n    $match:\n      {\n        client_id: 2,\n        created_by: 8,\n        activity_type: \"AUTOFILL\",\n        status: \"COMPLETED\",\n        created_at: {\n          $gte: 1735751702000,\n          $lte: 1737047716000,\n        },\n      },\n  },\n  {\n    $project:\n      {\n        client_id: 1,\n        created_by: 1,\n        document: \"$activity_meta.documentId\",\n        id: \"$run_id\",\n        created_date: {\n          $dateToString: {\n            format: \"%Y-%m-%d\",\n            date: {\n              $toDate: \"$created_at\",\n            },\n          },\n        },\n        completed_questions:\n          \"$activity_stats.completed\",\n        answered_questions:\n          \"$activity_stats.answered\",\n        unanswered_questions:\n          \"$activity_stats.unanswered\",\n        total_time: {\n          $divide: [\n            {\n              $subtract: [\n                \"$updated_at\",\n                \"$created_at\",\n              ],\n            },\n            1000,\n          ],\n        },\n      },\n  },\n  {\n    $group: {\n      _id: {\n        created_date: \"$created_date\",\n        created_by: \"$created_by\",\n        client_id: \"$client_id\",\n      },\n      totalQuestions: {\n        $sum: \"$completed_questions\",\n      },\n      totalQuestionsAnswered: {\n        $sum: \"$answered_questions\",\n      },\n      totalTime: {\n        $sum: \"$total_time\",\n      },\n      totalRuns: {\n        $sum: 1,\n      },\n      autoFillDocuments: {\n        $addToSet: \"$document\",\n      },\n    },\n  },\n  {\n    $project: {\n      created: \"$_id.created_dt\",\n      clientId: \"$_id.clientId\",\n      userId: \"$_id.userId\",\n      totalQuestions: \"$totalQuestions\",\n      totalQuestionsAnswered:\n        \"$totalQuestionsAnswered\",\n      totalRuns: \"$totalRuns\",\n      totalDocuments: {\n        $size: \"$autoFillDocuments\",\n      },\n      averageResponseTime: {\n        $divide: [\n          \"$totalTime\",\n          \"$totalQuestions\",\n        ],\n      },\n    },\n  },\n],\n  \"cursor\": {}\n}\n",
+      "encodeParamsToggle": true,
+      "formData": {
+        "aggregate": {
+          "arrayPipelines": {
+            "data": "[\n  {\n    $match: {{ autofill_total_qs_filter_js.getMatchQuery() }}\n  },\n  {\n    $project: {\n      client_id: 1,\n      created_by: 1,\n      document: \"$activity_meta.name\",\n      id: \"$run_id\",\n      created_date: {\n        $dateToString: {\n          format: \"%Y-%m-%d\",\n          date: {\n            $toDate: \"$created_at\",\n          },\n        },\n      },\n      completed_questions: \"$activity_stats.completed\",\n      answered_questions: \"$activity_stats.answered\",\n      unanswered_questions: \"$activity_stats.unanswered\",\n      total_time: {\n        $divide: [\n          {\n            $subtract: [\"$updated_at\", \"$created_at\"],\n          },\n          1000,\n        ],\n      },\n    },\n  },\n  {\n    $group: {\n      _id: {\n        created_date: \"$created_date\",\n        created_by: \"$created_by\",\n        client_id: \"$client_id\",\n      },\n      totalQuestions: { $sum: \"$completed_questions\" },\n      totalQuestionsAnswered: { $sum: \"$answered_questions\" },\n      totalTime: { $sum: \"$total_time\" },\n      totalRuns: { $sum: 1 },\n      autoFillDocuments: { $addToSet: \"$document\" },\n    },\n  },\n  {\n    $facet: {\n      groupData: [\n        {\n          $project: {\n            created: \"$_id.created_date\",\n            clientId: \"$_id.client_id\",\n            userId: \"$_id.created_by\",\n            totalQuestions: \"$totalQuestions\",\n            totalQuestionsAnswered: \"$totalQuestionsAnswered\",\n            totalRuns: \"$totalRuns\",\n            totalDocuments: { $size: \"$autoFillDocuments\" },\n            averageResponseTime: {\n              $cond: {\n                if: { $eq: [\"$totalQuestions\", 0] },\n                then: 0,\n                else: { $divide: [\"$totalTime\", \"$totalQuestions\"] },\n              },\n            },\n            autoFillDocuments: \"$autoFillDocuments\",\n          },\n        },\n      ],\n      uniqueDocuments: [\n        {\n          $group: {\n            _id: null,\n            allDocuments: { $addToSet: \"$autoFillDocuments\" },\n          },\n        },\n        {\n          $project: {\n            totalUniqueDocuments: {\n              $size: {\n                $reduce: {\n                  input: \"$allDocuments\",\n                  initialValue: [],\n                  in: { $setUnion: [\"$$value\", \"$$this\"] },\n                },\n              },\n            },\n          },\n        },\n      ],\n    },\n  },\n  {\n    $project: {\n      groupData: 1,\n      totalUniqueDocuments: {\n        $arrayElemAt: [\"$uniqueDocuments.totalUniqueDocuments\", 0],\n      },\n    },\n  },\n  {\n    $unwind: \"$groupData\",\n  },\n  {\n    $addFields: {\n      \"groupData.totalUniqueDocuments\": \"$totalUniqueDocuments\",\n    },\n  },\n  {\n    $replaceRoot: { newRoot: \"$groupData\" },\n  },\n]"
+          },
+          "limit": {
+            "data": "2000"
+          }
+        },
+        "collection": {
+          "data": "activity_center"
+        },
+        "command": {
+          "data": "AGGREGATE"
+        },
+        "count": {
+          "query": {
+            "data": ""
+          }
+        },
+        "delete": {
+          "limit": {
+            "data": "SINGLE"
+          },
+          "query": {
+            "data": ""
+          }
+        },
+        "distinct": {
+          "key": {
+            "data": ""
+          },
+          "query": {
+            "data": ""
+          }
+        },
+        "find": {
+          "limit": {
+            "data": ""
+          },
+          "projection": {
+            "data": ""
+          },
+          "query": {
+            "data": ""
+          },
+          "skip": {
+            "data": ""
+          },
+          "sort": {
+            "data": ""
+          }
+        },
+        "insert": {
+          "documents": {
+            "data": ""
+          }
+        },
+        "misc": {
+          "formToNativeQuery": {
+            "data": "{\n  \"aggregate\": \"activity_center\",\n  \"pipeline\": [\n  {\n    $match: {{ autofill_total_qs_filter_js.getMatchQuery() }}\n  },\n  {\n    $project: {\n      client_id: 1,\n      created_by: 1,\n      document: \"$activity_meta.name\",\n      id: \"$run_id\",\n      created_date: {\n        $dateToString: {\n          format: \"%Y-%m-%d\",\n          date: {\n            $toDate: \"$created_at\",\n          },\n        },\n      },\n      completed_questions: \"$activity_stats.completed\",\n      answered_questions: \"$activity_stats.answered\",\n      unanswered_questions: \"$activity_stats.unanswered\",\n      total_time: {\n        $divide: [\n          {\n            $subtract: [\"$updated_at\", \"$created_at\"],\n          },\n          1000,\n        ],\n      },\n    },\n  },\n  {\n    $group: {\n      _id: {\n        created_date: \"$created_date\",\n        created_by: \"$created_by\",\n        client_id: \"$client_id\",\n      },\n      totalQuestions: { $sum: \"$completed_questions\" },\n      totalQuestionsAnswered: { $sum: \"$answered_questions\" },\n      totalTime: { $sum: \"$total_time\" },\n      totalRuns: { $sum: 1 },\n      autoFillDocuments: { $addToSet: \"$document\" },\n    },\n  },\n  {\n    $facet: {\n      groupData: [\n        {\n          $project: {\n            created: \"$_id.created_date\",\n            clientId: \"$_id.client_id\",\n            userId: \"$_id.created_by\",\n            totalQuestions: \"$totalQuestions\",\n            totalQuestionsAnswered: \"$totalQuestionsAnswered\",\n            totalRuns: \"$totalRuns\",\n            totalDocuments: { $size: \"$autoFillDocuments\" },\n            averageResponseTime: {\n              $cond: {\n                if: { $eq: [\"$totalQuestions\", 0] },\n                then: 0,\n                else: { $divide: [\"$totalTime\", \"$totalQuestions\"] },\n              },\n            },\n            autoFillDocuments: \"$autoFillDocuments\",\n          },\n        },\n      ],\n      uniqueDocuments: [\n        {\n          $group: {\n            _id: null,\n            allDocuments: { $addToSet: \"$autoFillDocuments\" },\n          },\n        },\n        {\n          $project: {\n            totalUniqueDocuments: {\n              $size: {\n                $reduce: {\n                  input: \"$allDocuments\",\n                  initialValue: [],\n                  in: { $setUnion: [\"$$value\", \"$$this\"] },\n                },\n              },\n            },\n          },\n        },\n      ],\n    },\n  },\n  {\n    $project: {\n      groupData: 1,\n      totalUniqueDocuments: {\n        $arrayElemAt: [\"$uniqueDocuments.totalUniqueDocuments\", 0],\n      },\n    },\n  },\n  {\n    $unwind: \"$groupData\",\n  },\n  {\n    $addFields: {\n      \"groupData.totalUniqueDocuments\": \"$totalUniqueDocuments\",\n    },\n  },\n  {\n    $replaceRoot: { newRoot: \"$groupData\" },\n  },\n],\n  \"cursor\": {}\n}\n",
+            "status": "SUCCESS"
+          }
+        },
+        "smartSubstitution": {
+          "data": true
+        },
+        "updateMany": {
+          "limit": {
+            "data": "SINGLE"
+          },
+          "query": {
+            "data": ""
+          },
+          "update": {
+            "data": ""
+          }
+        }
+      },
+      "paginationType": "NONE",
+      "timeoutInMillisecond": 10000
+    },
+    "confirmBeforeExecute": false,
+    "datasource": {
+      "id": "mongo-products-prod-us-east-2",
+      "isAutoGenerated": false,
+      "name": "mongo-products-prod-us-east-2",
+      "pluginId": "mongo-plugin"
+    },
+    "dynamicBindingPathList": [
+      {
+        "key": "formData.aggregate.arrayPipelines.data"
+      }
+    ],
+    "executeOnLoad": false,
+    "name": "autofill_runs_qry",
+    "pageId": "Usage Logs",
+    "userSetOnLoad": false
+  }
+}

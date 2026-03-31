@@ -1,0 +1,112 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_9d547977-14a0-4e2d-866b-9e875154ea34",
+  "id": "Usage Logs_autofill_stats",
+  "pluginId": "mongo-plugin",
+  "pluginType": "DB",
+  "unpublishedAction": {
+    "actionConfiguration": {
+      "body": "{\n  \"aggregate\": \"activity_center\",\n  \"pipeline\": [\n  {\n    $match: {{ autofill_total_qs_filter_js.getMatchQuery() }}\n  },\n  {\n    $project:\n      {\n        document: \"$activity_meta.documentId\",\n        id: \"$run_id\",\n        completed_questions:\n          \"$activity_stats.completed\",\n        answered_questions:\n          \"$activity_stats.answered\",\n        unanswered_questions:\n          \"$activity_stats.unanswered\",\n        total_time: {\n          $divide: [\n            {\n              $subtract: [\n                \"$updated_at\",\n                \"$created_at\",\n              ],\n            },\n            1000,\n          ],\n        },\n      },\n  },\n  {\n    $group: {\n      _id: null,\n      totalQuestions: {\n        $sum: \"$completed_questions\",\n      },\n      totalQuestionsAnswered: {\n        $sum: \"$answered_questions\",\n      },\n      totalTime: {\n        $sum: \"$total_time\",\n      },\n      totalRuns: {\n        $sum: 1,\n      },\n      autoFillDocuments: {\n        $addToSet: \"$document\",\n      },\n    },\n  },\n  {\n    $project: {\n      totalQuestions: \"$totalQuestions\",\n      totalQuestionsAnswered:\n        \"$totalQuestionsAnswered\",\n      totalRuns: \"$totalRuns\",\n      totalDocuments: {\n        $size: \"$autoFillDocuments\",\n      },\n      averageResponseTime: {\n        $divide: [\n          \"$totalTime\",\n          \"$totalQuestions\",\n        ],\n      },\n    },\n  },\n],\n  \"cursor\": {}\n}\n",
+      "encodeParamsToggle": true,
+      "formData": {
+        "aggregate": {
+          "arrayPipelines": {
+            "data": "[\n  {\n    $match: {{ autofill_total_qs_filter_js.getMatchQuery() }}\n  },\n  {\n    $project:\n      {\n        document: \"$activity_meta.name\",\n        id: \"$run_id\",\n        completed_questions:\n          \"$activity_stats.completed\",\n        answered_questions:\n          \"$activity_stats.answered\",\n        unanswered_questions:\n          \"$activity_stats.unanswered\",\n\t\t    tx_consumed: \"$tx_consumed\",\n        total_time: {\n          $divide: [\n            {\n              $subtract: [\n                \"$updated_at\",\n                \"$created_at\",\n              ],\n            },\n            1000,\n          ],\n        },\n      },\n  },\n  {\n    $group: {\n      _id: null,\n      totalQuestions: {\n        $sum: \"$completed_questions\",\n      },\n      totalQuestionsAnswered: {\n        $sum: \"$answered_questions\",\n      },\n\t\t\ttotalTransactions: {\n        $sum: \"$tx_consumed\",\n      },\n      totalTime: {\n        $sum: \"$total_time\",\n      },\n      totalRuns: {\n        $sum: 1,\n      },\n      autoFillDocuments: {\n        $addToSet: \"$document\",\n      },\n    },\n  },\n  {\n    $project: {\n      totalQuestions: \"$totalQuestions\",\n      totalQuestionsAnswered:\n        \"$totalQuestionsAnswered\",\n      totalRuns: \"$totalRuns\",\n\t\t\ttotalTransactions: \"$totalTransactions\",\n      totalDocuments: {\n        $size: \"$autoFillDocuments\",\n      },\n      averageResponseTime: {\n        $divide: [\n          \"$totalTime\",\n          \"$totalQuestions\",\n        ],\n      },\n    },\n  },\n]"
+          },
+          "limit": {
+            "data": "2000"
+          }
+        },
+        "collection": {
+          "data": "activity_center"
+        },
+        "command": {
+          "data": "AGGREGATE"
+        },
+        "count": {
+          "query": {
+            "data": ""
+          }
+        },
+        "delete": {
+          "limit": {
+            "data": "SINGLE"
+          },
+          "query": {
+            "data": ""
+          }
+        },
+        "distinct": {
+          "key": {
+            "data": ""
+          },
+          "query": {
+            "data": ""
+          }
+        },
+        "find": {
+          "limit": {
+            "data": ""
+          },
+          "projection": {
+            "data": ""
+          },
+          "query": {
+            "data": ""
+          },
+          "skip": {
+            "data": ""
+          },
+          "sort": {
+            "data": ""
+          }
+        },
+        "insert": {
+          "documents": {
+            "data": ""
+          }
+        },
+        "misc": {
+          "formToNativeQuery": {
+            "data": "{\n  \"aggregate\": \"activity_center\",\n  \"pipeline\": [\n  {\n    $match: {{ autofill_total_qs_filter_js.getMatchQuery() }}\n  },\n  {\n    $project:\n      {\n        document: \"$activity_meta.name\",\n        id: \"$run_id\",\n        completed_questions:\n          \"$activity_stats.completed\",\n        answered_questions:\n          \"$activity_stats.answered\",\n        unanswered_questions:\n          \"$activity_stats.unanswered\",\n\t\t    tx_consumed: \"$tx_consumed\",\n        total_time: {\n          $divide: [\n            {\n              $subtract: [\n                \"$updated_at\",\n                \"$created_at\",\n              ],\n            },\n            1000,\n          ],\n        },\n      },\n  },\n  {\n    $group: {\n      _id: null,\n      totalQuestions: {\n        $sum: \"$completed_questions\",\n      },\n      totalQuestionsAnswered: {\n        $sum: \"$answered_questions\",\n      },\n\t\t\ttotalTransactions: {\n        $sum: \"$tx_consumed\",\n      },\n      totalTime: {\n        $sum: \"$total_time\",\n      },\n      totalRuns: {\n        $sum: 1,\n      },\n      autoFillDocuments: {\n        $addToSet: \"$document\",\n      },\n    },\n  },\n  {\n    $project: {\n      totalQuestions: \"$totalQuestions\",\n      totalQuestionsAnswered:\n        \"$totalQuestionsAnswered\",\n      totalRuns: \"$totalRuns\",\n\t\t\ttotalTransactions: \"$totalTransactions\",\n      totalDocuments: {\n        $size: \"$autoFillDocuments\",\n      },\n      averageResponseTime: {\n        $divide: [\n          \"$totalTime\",\n          \"$totalQuestions\",\n        ],\n      },\n    },\n  },\n],\n  \"cursor\": {}\n}\n",
+            "status": "SUCCESS"
+          }
+        },
+        "smartSubstitution": {
+          "data": true
+        },
+        "updateMany": {
+          "limit": {
+            "data": "SINGLE"
+          },
+          "query": {
+            "data": ""
+          },
+          "update": {
+            "data": ""
+          }
+        }
+      },
+      "paginationType": "NONE",
+      "timeoutInMillisecond": 10000
+    },
+    "confirmBeforeExecute": false,
+    "datasource": {
+      "id": "mongo-products-prod-us-east-2",
+      "isAutoGenerated": false,
+      "name": "mongo-products-prod-us-east-2",
+      "pluginId": "mongo-plugin"
+    },
+    "dynamicBindingPathList": [
+      {
+        "key": "formData.aggregate.arrayPipelines.data"
+      },
+      {
+        "key": "body"
+      }
+    ],
+    "executeOnLoad": false,
+    "name": "autofill_stats",
+    "pageId": "Usage Logs",
+    "userSetOnLoad": true
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_a5b36839-bacd-40bb-88c5-cf392c680c7e",
+  "id": "Usage Logs_post_call_logs_qry",
+  "pluginId": "mongo-plugin",
+  "pluginType": "DB",
+  "unpublishedAction": {
+    "actionConfiguration": {
+      "encodeParamsToggle": true,
+      "formData": {
+        "aggregate": {
+          "arrayPipelines": {
+            "data": "[\n\t{\n\t\t$match: {\n\t\t\t\"workflow_name\": \"POST_CALL_WORKFLOW\"\n\t\t}\n\t}\n\t{\n\t$match: {{ workflow_logs_filter_js.getMatchQuery() }},\n\t},\n{ $sort: { started_at: -1 } },\n{\n\t$project: {\n\t\t_id: 0,\n\t\tcreated_at: 1, \n\t\tevent_subject: 1,\n\t\tclient_id: 1,\n\t\tworkflow_name: 1,\n\t\tattendee_emails: 1,\n\t\tcustomer_name: \"$processed_emails.email_content.customer_name\",\n\t\tcall_name: \"$processed_emails.email_content.call_name\",\n\t\tcall_date: \"$processed_emails.email_content.call_date\",\n\t\texecutive_snapshot: \"$processed_emails.email_content.executive_snapshot_description\",\n\n\t\tprospect_attendees_text: {\n\t\t\t$let: {\n\t\t\t\tvars: {\n\t\t\t\t\tpaAll: {\n\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\tinput: {\n\t\t\t\t\t\t\t\t$map: {\n\t\t\t\t\t\t\t\t\tinput: { $ifNull: [\"$processed_emails.email_content.stakeholders_points\", []] },\n\t\t\t\t\t\t\t\t\tas: \"sp\",\n\t\t\t\t\t\t\t\t\tin: { $ifNull: [\"$$sp.prospect_attendees\", []] }\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tinitialValue: [],\n\t\t\t\t\t\t\tin: { $concatArrays: [\"$$value\", \"$$this\"] }\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\tin: {\n\t\t\t\t\t$reduce: {\n\t\t\t\t\t\tinput: \"$$paAll\",\n\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\"$$this.attendee\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tour_attendees_text: {\n\t\t\t$let: {\n\t\t\t\tvars: {\n\t\t\t\t\toaAll: {\n\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\tinput: {\n\t\t\t\t\t\t\t\t$map: {\n\t\t\t\t\t\t\t\t\tinput: { $ifNull: [\"$processed_emails.email_content.stakeholders_points\", []] },\n\t\t\t\t\t\t\t\t\tas: \"sp\",\n\t\t\t\t\t\t\t\t\tin: { $ifNull: [\"$$sp.our_attendees\", []] }\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tinitialValue: [],\n\t\t\t\t\t\t\tin: { $concatArrays: [\"$$value\", \"$$this\"] }\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\tin: {\n\t\t\t\t\t$reduce: {\n\t\t\t\t\t\tinput: \"$$oaAll\",\n\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\"$$this.attendee\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tpain_points_text: {\n\t\t\t$let: {\n\t\t\t\tvars: { pts: { $ifNull: [\"$processed_emails.email_content.pain_points_points\", []] } },\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $ifNull: [\"$processed_emails.email_content.pain_points_description\", \"\"] },\n\t\t\t\t\t\t{ $cond: [{ $gt: [{ $size: \"$$pts\" }, 0] }, \" | \", \"\"] },\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\t\tinput: \"$$pts\",\n\t\t\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tcompetitive_intel_text: {\n\t\t\t$let: {\n\t\t\t\tvars: { cps: { $ifNull: [\"$processed_emails.email_content.competitive_intels_points\", []] } },\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $ifNull: [\"$processed_emails.email_content.competitive_intels_description\", \"\"] },\n\t\t\t\t\t\t{ $cond: [{ $gt: [{ $size: \"$$cps\" }, 0] }, \" | \", \"\"] },\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\t\tinput: \"$$cps\",\n\t\t\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tbuying_signal_text: {\n\t\t\t$let: {\n\t\t\t\tvars: { pis: { $ifNull: [\"$processed_emails.email_content.positive_intent_points\", []] } },\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $ifNull: [\"$processed_emails.email_content.buying_signal_description\", \"\"] },\n\t\t\t\t\t\t{ $cond: [{ $gt: [{ $size: \"$$pis\" }, 0] }, \" | \", \"\"] },\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\t\tinput: \"$$pis\",\n\t\t\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tcommitment_tracking_text: {\n\t\t\t$let: {\n\t\t\t\tvars: { ctp: { $ifNull: [\"$processed_emails.email_content.commitment_tracking_points\", []] } },\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $ifNull: [\"$processed_emails.email_content.commitment_tracking_description\", \"\"] },\n\t\t\t\t\t\t{ $cond: [{ $gt: [{ $size: \"$$ctp\" }, 0] }, \" | \", \"\"] },\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\t\tinput: \"$$ctp\",\n\t\t\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tobjections_text: {\n\t\t\t$let: {\n\t\t\t\tvars: { ops: { $ifNull: [\"$processed_emails.email_content.objections_points\", []] } },\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $ifNull: [\"$processed_emails.email_content.objections_description\", \"\"] },\n\t\t\t\t\t\t{ $cond: [{ $gt: [{ $size: \"$$ops\" }, 0] }, \" | \", \"\"] },\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\t\tinput: {\n\t\t\t\t\t\t\t\t\t$map: {\n\t\t\t\t\t\t\t\t\t\tinput: \"$$ops\",\n\t\t\t\t\t\t\t\t\t\tas: \"p\",\n\t\t\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t\t\t\"Objection: \", { $ifNull: [\"$$p.objection\", \"\"] },\n\t\t\t\t\t\t\t\t\t\t\t\t\" Counter: \", { $ifNull: [\"$$p.counter\", \"\"] },\n\t\t\t\t\t\t\t\t\t\t\t\t\" Suggested: \", { $ifNull: [\"$$p.suggested_counter\", \"\"] }\n\t\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tsimilar_deals: {\n\t\t\t$let: {\n\t\t\t\tvars: { sps: { $ifNull: [\"$processed_emails.email_content.similar_deals_points\", []] } },\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $ifNull: [\"$processed_emails.email_content.similar_deals_description\", \"\"] },\n\t\t\t\t\t\t{ $cond: [{ $gt: [{ $size: \"$$sps\" }, 0] }, \" | \", \"\"] },\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\t\tinput: {\n\t\t\t\t\t\t\t\t\t$map: {\n\t\t\t\t\t\t\t\t\t\tinput: \"$$sps\",\n\t\t\t\t\t\t\t\t\t\tas: \"p\",\n\t\t\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t\t\t\"Objection: \", { $ifNull: [\"$$p.objection\", \"\"] },\n\t\t\t\t\t\t\t\t\t\t\t\t\" Counter: \", { $ifNull: [\"$$p.counter\", \"\"] }\n\t\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tnext_steps_text: {\n\t\t\t$let: {\n\t\t\t\tvars: { ns: { $ifNull: [\"$processed_emails.email_content.next_steps_points\", []] } },\n\t\t\t\tin: {\n\t\t\t\t\t$reduce: {\n\t\t\t\t\t\tinput: { $map: { input: \"$$ns\", as: \"p\", in: \"$$p.text\" } },\n\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"tx_consumed\": 1\n\t}\n}\n]"
+          },
+          "limit": {
+            "data": "2000"
+          }
+        },
+        "collection": {
+          "data": "ingestion_workflow_logs"
+        },
+        "command": {
+          "data": "AGGREGATE"
+        },
+        "count": {
+          "query": {
+            "data": ""
+          }
+        },
+        "delete": {
+          "limit": {
+            "data": "SINGLE"
+          },
+          "query": {
+            "data": ""
+          }
+        },
+        "distinct": {
+          "key": {
+            "data": ""
+          },
+          "query": {
+            "data": ""
+          }
+        },
+        "find": {
+          "limit": {
+            "data": ""
+          },
+          "projection": {
+            "data": ""
+          },
+          "query": {
+            "data": ""
+          },
+          "skip": {
+            "data": ""
+          },
+          "sort": {
+            "data": ""
+          }
+        },
+        "insert": {
+          "documents": {
+            "data": ""
+          }
+        },
+        "misc": {
+          "formToNativeQuery": {
+            "data": "{\n  \"aggregate\": \"ingestion_workflow_logs\",\n  \"pipeline\": [\n\t{\n\t\t$match: {\n\t\t\t\"workflow_name\": \"POST_CALL_WORKFLOW\"\n\t\t}\n\t}\n\t{\n\t$match: {{ workflow_logs_filter_js.getMatchQuery() }},\n\t},\n{ $sort: { started_at: -1 } },\n{\n\t$project: {\n\t\t_id: 0,\n\t\tcreated_at: 1, \n\t\tevent_subject: 1,\n\t\tclient_id: 1,\n\t\tworkflow_name: 1,\n\t\tattendee_emails: 1,\n\t\tcustomer_name: \"$processed_emails.email_content.customer_name\",\n\t\tcall_name: \"$processed_emails.email_content.call_name\",\n\t\tcall_date: \"$processed_emails.email_content.call_date\",\n\t\texecutive_snapshot: \"$processed_emails.email_content.executive_snapshot_description\",\n\n\t\tprospect_attendees_text: {\n\t\t\t$let: {\n\t\t\t\tvars: {\n\t\t\t\t\tpaAll: {\n\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\tinput: {\n\t\t\t\t\t\t\t\t$map: {\n\t\t\t\t\t\t\t\t\tinput: { $ifNull: [\"$processed_emails.email_content.stakeholders_points\", []] },\n\t\t\t\t\t\t\t\t\tas: \"sp\",\n\t\t\t\t\t\t\t\t\tin: { $ifNull: [\"$$sp.prospect_attendees\", []] }\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tinitialValue: [],\n\t\t\t\t\t\t\tin: { $concatArrays: [\"$$value\", \"$$this\"] }\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\tin: {\n\t\t\t\t\t$reduce: {\n\t\t\t\t\t\tinput: \"$$paAll\",\n\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\"$$this.attendee\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tour_attendees_text: {\n\t\t\t$let: {\n\t\t\t\tvars: {\n\t\t\t\t\toaAll: {\n\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\tinput: {\n\t\t\t\t\t\t\t\t$map: {\n\t\t\t\t\t\t\t\t\tinput: { $ifNull: [\"$processed_emails.email_content.stakeholders_points\", []] },\n\t\t\t\t\t\t\t\t\tas: \"sp\",\n\t\t\t\t\t\t\t\t\tin: { $ifNull: [\"$$sp.our_attendees\", []] }\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tinitialValue: [],\n\t\t\t\t\t\t\tin: { $concatArrays: [\"$$value\", \"$$this\"] }\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\tin: {\n\t\t\t\t\t$reduce: {\n\t\t\t\t\t\tinput: \"$$oaAll\",\n\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\"$$this.attendee\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tpain_points_text: {\n\t\t\t$let: {\n\t\t\t\tvars: { pts: { $ifNull: [\"$processed_emails.email_content.pain_points_points\", []] } },\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $ifNull: [\"$processed_emails.email_content.pain_points_description\", \"\"] },\n\t\t\t\t\t\t{ $cond: [{ $gt: [{ $size: \"$$pts\" }, 0] }, \" | \", \"\"] },\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\t\tinput: \"$$pts\",\n\t\t\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tcompetitive_intel_text: {\n\t\t\t$let: {\n\t\t\t\tvars: { cps: { $ifNull: [\"$processed_emails.email_content.competitive_intels_points\", []] } },\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $ifNull: [\"$processed_emails.email_content.competitive_intels_description\", \"\"] },\n\t\t\t\t\t\t{ $cond: [{ $gt: [{ $size: \"$$cps\" }, 0] }, \" | \", \"\"] },\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\t\tinput: \"$$cps\",\n\t\t\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tbuying_signal_text: {\n\t\t\t$let: {\n\t\t\t\tvars: { pis: { $ifNull: [\"$processed_emails.email_content.positive_intent_points\", []] } },\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $ifNull: [\"$processed_emails.email_content.buying_signal_description\", \"\"] },\n\t\t\t\t\t\t{ $cond: [{ $gt: [{ $size: \"$$pis\" }, 0] }, \" | \", \"\"] },\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\t\tinput: \"$$pis\",\n\t\t\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tcommitment_tracking_text: {\n\t\t\t$let: {\n\t\t\t\tvars: { ctp: { $ifNull: [\"$processed_emails.email_content.commitment_tracking_points\", []] } },\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $ifNull: [\"$processed_emails.email_content.commitment_tracking_description\", \"\"] },\n\t\t\t\t\t\t{ $cond: [{ $gt: [{ $size: \"$$ctp\" }, 0] }, \" | \", \"\"] },\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\t\tinput: \"$$ctp\",\n\t\t\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tobjections_text: {\n\t\t\t$let: {\n\t\t\t\tvars: { ops: { $ifNull: [\"$processed_emails.email_content.objections_points\", []] } },\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $ifNull: [\"$processed_emails.email_content.objections_description\", \"\"] },\n\t\t\t\t\t\t{ $cond: [{ $gt: [{ $size: \"$$ops\" }, 0] }, \" | \", \"\"] },\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\t\tinput: {\n\t\t\t\t\t\t\t\t\t$map: {\n\t\t\t\t\t\t\t\t\t\tinput: \"$$ops\",\n\t\t\t\t\t\t\t\t\t\tas: \"p\",\n\t\t\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t\t\t\"Objection: \", { $ifNull: [\"$$p.objection\", \"\"] },\n\t\t\t\t\t\t\t\t\t\t\t\t\" Counter: \", { $ifNull: [\"$$p.counter\", \"\"] },\n\t\t\t\t\t\t\t\t\t\t\t\t\" Suggested: \", { $ifNull: [\"$$p.suggested_counter\", \"\"] }\n\t\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tsimilar_deals: {\n\t\t\t$let: {\n\t\t\t\tvars: { sps: { $ifNull: [\"$processed_emails.email_content.similar_deals_points\", []] } },\n\t\t\t\tin: {\n\t\t\t\t\t$concat: [\n\t\t\t\t\t\t{ $ifNull: [\"$processed_emails.email_content.similar_deals_description\", \"\"] },\n\t\t\t\t\t\t{ $cond: [{ $gt: [{ $size: \"$$sps\" }, 0] }, \" | \", \"\"] },\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t$reduce: {\n\t\t\t\t\t\t\t\tinput: {\n\t\t\t\t\t\t\t\t\t$map: {\n\t\t\t\t\t\t\t\t\t\tinput: \"$$sps\",\n\t\t\t\t\t\t\t\t\t\tas: \"p\",\n\t\t\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t\t\t\"Objection: \", { $ifNull: [\"$$p.objection\", \"\"] },\n\t\t\t\t\t\t\t\t\t\t\t\t\" Counter: \", { $ifNull: [\"$$p.counter\", \"\"] }\n\t\t\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t\t\t]\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\n\t\tnext_steps_text: {\n\t\t\t$let: {\n\t\t\t\tvars: { ns: { $ifNull: [\"$processed_emails.email_content.next_steps_points\", []] } },\n\t\t\t\tin: {\n\t\t\t\t\t$reduce: {\n\t\t\t\t\t\tinput: { $map: { input: \"$$ns\", as: \"p\", in: \"$$p.text\" } },\n\t\t\t\t\t\tinitialValue: \"\",\n\t\t\t\t\t\tin: {\n\t\t\t\t\t\t\t$concat: [\n\t\t\t\t\t\t\t\t{ $cond: [{ $eq: [\"$$value\", \"\"] }, \"\", \" | \"] },\n\t\t\t\t\t\t\t\t\"$$this\"\n\t\t\t\t\t\t\t]\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"tx_consumed\": 1\n\t}\n}\n],\n  \"cursor\": {}\n}\n",
+            "status": "SUCCESS"
+          }
+        },
+        "smartSubstitution": {
+          "data": true
+        },
+        "updateMany": {
+          "limit": {
+            "data": "SINGLE"
+          },
+          "query": {
+            "data": ""
+          },
+          "update": {
+            "data": ""
+          }
+        }
+      },
+      "paginationType": "NONE",
+      "timeoutInMillisecond": 10000
+    },
+    "confirmBeforeExecute": false,
+    "datasource": {
+      "id": "mongo-auditlogs-prod-us-east-2",
+      "isAutoGenerated": false,
+      "name": "mongo-auditlogs-prod-us-east-2",
+      "pluginId": "mongo-plugin"
+    },
+    "dynamicBindingPathList": [
+      {
+        "key": "formData.aggregate.arrayPipelines.data"
+      }
+    ],
+    "executeOnLoad": false,
+    "name": "post_call_logs_qry",
+    "pageId": "Usage Logs",
+    "userSetOnLoad": true
+  }
+}

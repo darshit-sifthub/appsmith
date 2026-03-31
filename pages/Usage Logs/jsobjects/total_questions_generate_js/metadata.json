@@ -1,0 +1,11 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_6ba7db74-8f00-4c7f-a3f2-3ee9256716de",
+  "id": "Usage Logs_total_questions_generate_js",
+  "unpublishedCollection": {
+    "name": "total_questions_generate_js",
+    "pageId": "Usage Logs",
+    "pluginId": "js-plugin",
+    "pluginType": "JS",
+    "variables": []
+  }
+}

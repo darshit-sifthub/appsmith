@@ -1,0 +1,20 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_9e55193c-c889-419f-9616-8f2167f08d87",
+  "id": "Usage Logs_post_call_qry",
+  "unpublishedCollection": {
+    "name": "post_call_qry",
+    "pageId": "Usage Logs",
+    "pluginId": "js-plugin",
+    "pluginType": "JS",
+    "variables": [
+      {
+        "name": "myVar1",
+        "value": "[]"
+      },
+      {
+        "name": "myVar2",
+        "value": "{}"
+      }
+    ]
+  }
+}

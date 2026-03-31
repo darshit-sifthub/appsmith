@@ -1,0 +1,1 @@
+SELECT count(1) as total_projects, created_by, date(created_dt), client_id from project p {{ projects_count_filter_js.getMatchQuery() }} group by date(created_dt), client_id , created_by order by created_dt desc;

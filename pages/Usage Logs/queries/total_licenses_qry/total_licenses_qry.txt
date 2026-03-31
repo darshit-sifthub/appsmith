@@ -1,0 +1,12 @@
+SELECT
+    spcc.client_id AS id,
+    CASE WHEN spcc.key = 'user_limit' THEN spcc.value END AS total_licenses,
+    CASE WHEN spcc.key = 'transaction_limit' THEN spcc.value END AS total_transactions
+FROM
+    subscription_plan_client_config spcc 
+INNER JOIN 
+    client_master cm ON cm.id = spcc.client_id AND cm.is_delete = 0 AND cm.is_active = 1
+WHERE
+    spcc.key IN ('user_limit', 'transaction_limit')
+GROUP BY
+    spcc.client_id

@@ -1,0 +1,4 @@
+{
+  "count": "generate_audit_log",
+  "query": {{ no_information_found_filter_js.getMatchQuery() }},
+}

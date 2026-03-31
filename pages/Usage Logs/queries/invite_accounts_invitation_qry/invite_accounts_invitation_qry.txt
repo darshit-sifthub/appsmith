@@ -1,0 +1,1 @@
+SELECT name, email as account_owner, updated_dt as invited_on from signup_master where is_delete= 0 and is_active = 0;

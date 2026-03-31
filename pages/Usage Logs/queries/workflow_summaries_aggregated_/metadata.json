@@ -1,0 +1,108 @@
+{
+  "gitSyncId": "67455667d4a6ed75f9345dde_4a71abb3-5ac6-4215-b7ae-863b56810f23",
+  "id": "Usage Logs_workflow_summaries_aggregated_",
+  "pluginId": "mongo-plugin",
+  "pluginType": "DB",
+  "unpublishedAction": {
+    "actionConfiguration": {
+      "encodeParamsToggle": true,
+      "formData": {
+        "aggregate": {
+          "arrayPipelines": {
+            "data": ""
+          },
+          "limit": {
+            "data": "10"
+          }
+        },
+        "collection": {
+          "data": "workflow_summaries"
+        },
+        "command": {
+          "data": "FIND"
+        },
+        "count": {
+          "query": {
+            "data": ""
+          }
+        },
+        "delete": {
+          "limit": {
+            "data": "SINGLE"
+          },
+          "query": {
+            "data": ""
+          }
+        },
+        "distinct": {
+          "key": {
+            "data": ""
+          },
+          "query": {
+            "data": ""
+          }
+        },
+        "find": {
+          "limit": {
+            "data": ""
+          },
+          "projection": {
+            "data": ""
+          },
+          "query": {
+            "data": "[\n  {\n    \"$match\": {\n      \"email_date\": {\n        \"$gte\": {{ Math.floor(new Date(startDate.selectedDate).getTime() / 1) }},\n        \"$lte\": {{ Math.floor(new Date(endDate.selectedDate).getTime() / 1) }}\n      },\n      \"recipients\": {{ userSelect.selectedOptionValue ? userSelect.selectedOptionValue : { \"$exists\": true } }},\n            \"environment\": {{ envSelect.selectedOptionValue || {\"$exists\": true} }}\n    }\n  },\n  { \"$sort\": { \"email_date\": -1 } },\n  { \"$skip\": {{ (Table2.pageNo - 1) * 50 }} },\n  { \"$limit\": 50 },\n  {\n    \"$project\": {\n      \"_id\": 0,\n      \"Email Date\": {\n        \"$cond\": {\n          \"if\": { \"$gt\": [\"$email_date\", 0] },\n          \"then\": {\n            \"$dateToString\": {\n              \"format\": \"%Y-%m-%d\",\n              \"date\": { \"$toDate\": \"$email_date\" }\n            }\n          },\n          \"else\": \"N/A\"\n        }\n      },\n      \"Workflow ID\": { \"$ifNull\": [\"$workflow_id\", \"N/A\"] },\n      \"Workflow Name\": { \"$ifNull\": [\"$workflow_name\", \"N/A\"] },\n      \"Subject\": { \"$ifNull\": [\"$subject\", \"N/A\"] },\n      \"Template Name\": { \"$ifNull\": [\"$template_name\", \"N/A\"] },\n      \"Client ID\": { \"$ifNull\": [\"$client_id\", \"N/A\"] },\n            \"Environment\": { \"$ifNull\": [\"$environment\", \"N/A\"] },\n      \"Recipients\": { \"$size\": { \"$ifNull\": [\"$recipients\", []] } },\n      \"Unique Opens\": { \"$size\": { \"$ifNull\": [\"$unique_open_emails\", []] } },\n      \"Unique Clicks\": { \"$size\": { \"$ifNull\": [\"$unique_click_ids\", []] } },\n      \"Delivered\": { \"$ifNull\": [\"$delivered_count\", 0] },\n      \"Opens\": { \"$ifNull\": [\"$open_count\", 0] },\n      \"Clicks\": { \"$ifNull\": [\"$click_count\", 0] },\n      \"Bounces\": { \"$ifNull\": [\"$bounce_count\", 0] },\n      \"Unsubscribes\": { \"$ifNull\": [\"$unsubscribe_count\", 0] }\n    }\n  }\n]\n"
+          },
+          "skip": {
+            "data": ""
+          },
+          "sort": {
+            "data": ""
+          }
+        },
+        "insert": {
+          "documents": {
+            "data": ""
+          }
+        },
+        "misc": {
+          "formToNativeQuery": {
+            "data": "{\n  \"find\": \"workflow_summaries\",\n  \"filter\": [\n  {\n    \"$match\": {\n      \"email_date\": {\n        \"$gte\": {{ Math.floor(new Date(startDate.selectedDate).getTime() / 1) }},\n        \"$lte\": {{ Math.floor(new Date(endDate.selectedDate).getTime() / 1) }}\n      },\n      \"recipients\": {{ userSelect.selectedOptionValue ? userSelect.selectedOptionValue : { \"$exists\": true } }},\n            \"environment\": {{ envSelect.selectedOptionValue || {\"$exists\": true} }}\n    }\n  },\n  { \"$sort\": { \"email_date\": -1 } },\n  { \"$skip\": {{ (Table2.pageNo - 1) * 50 }} },\n  { \"$limit\": 50 },\n  {\n    \"$project\": {\n      \"_id\": 0,\n      \"Email Date\": {\n        \"$cond\": {\n          \"if\": { \"$gt\": [\"$email_date\", 0] },\n          \"then\": {\n            \"$dateToString\": {\n              \"format\": \"%Y-%m-%d\",\n              \"date\": { \"$toDate\": \"$email_date\" }\n            }\n          },\n          \"else\": \"N/A\"\n        }\n      },\n      \"Workflow ID\": { \"$ifNull\": [\"$workflow_id\", \"N/A\"] },\n      \"Workflow Name\": { \"$ifNull\": [\"$workflow_name\", \"N/A\"] },\n      \"Subject\": { \"$ifNull\": [\"$subject\", \"N/A\"] },\n      \"Template Name\": { \"$ifNull\": [\"$template_name\", \"N/A\"] },\n      \"Client ID\": { \"$ifNull\": [\"$client_id\", \"N/A\"] },\n            \"Environment\": { \"$ifNull\": [\"$environment\", \"N/A\"] },\n      \"Recipients\": { \"$size\": { \"$ifNull\": [\"$recipients\", []] } },\n      \"Unique Opens\": { \"$size\": { \"$ifNull\": [\"$unique_open_emails\", []] } },\n      \"Unique Clicks\": { \"$size\": { \"$ifNull\": [\"$unique_click_ids\", []] } },\n      \"Delivered\": { \"$ifNull\": [\"$delivered_count\", 0] },\n      \"Opens\": { \"$ifNull\": [\"$open_count\", 0] },\n      \"Clicks\": { \"$ifNull\": [\"$click_count\", 0] },\n      \"Bounces\": { \"$ifNull\": [\"$bounce_count\", 0] },\n      \"Unsubscribes\": { \"$ifNull\": [\"$unsubscribe_count\", 0] }\n    }\n  }\n]\n,\n  \"limit\": 10,\n  \"batchSize\": 10\n}\n",
+            "status": "SUCCESS"
+          }
+        },
+        "smartSubstitution": {
+          "data": true
+        },
+        "updateMany": {
+          "limit": {
+            "data": "SINGLE"
+          },
+          "query": {
+            "data": ""
+          },
+          "update": {
+            "data": ""
+          }
+        }
+      },
+      "paginationType": "NONE",
+      "timeoutInMillisecond": 10000
+    },
+    "confirmBeforeExecute": false,
+    "datasource": {
+      "id": "mongo-sa1-prod-us-east-2",
+      "isAutoGenerated": false,
+      "name": "mongo-sa1-prod-us-east-2",
+      "pluginId": "mongo-plugin"
+    },
+    "dynamicBindingPathList": [
+      {
+        "key": "formData.find.query.data"
+      }
+    ],
+    "executeOnLoad": false,
+    "name": "workflow_summaries_aggregated_",
+    "pageId": "Usage Logs",
+    "userSetOnLoad": false
+  }
+}
