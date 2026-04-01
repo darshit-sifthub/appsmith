@@ -21,6 +21,6 @@ export default {
 	getClientMapping(client_guid) {
 		// console.log('client', this.clientMapping);
 		const client = this.clientMapping.filter((_client) => _client.guid == client_guid);
-		return client?.[0]?.name || 'Unknown';  // Return the variable value
+		return client?.[0]?.name || 'N/A';  // Return the variable value
 	}
 }

@@ -18,6 +18,12 @@
     },
     {
       "key": "isDisabled"
+    },
+    {
+      "key": "optionLabel"
+    },
+    {
+      "key": "optionValue"
     }
   ],
   "dynamicHeight": "FIXED",
@@ -27,6 +33,12 @@
     },
     {
       "key": "isDisabled"
+    },
+    {
+      "key": "optionValue"
+    },
+    {
+      "key": "optionLabel"
     }
   ],
   "dynamicTriggerPathList": [],
@@ -60,8 +72,8 @@
     "selectionBGCSSVar": "--on-canvas-ui-widget-selection",
     "selectionColorCSSVar": "--on-canvas-ui-widget-focus"
   },
-  "optionLabel": "username",
-  "optionValue": "user_id",
+  "optionLabel": "{{user_id.sourceData.map((item) => ( 'label' ))}}",
+  "optionValue": "{{user_id.sourceData.map((item) => ( 'value' ))}}",
   "parentColumnSpace": 13.015625,
   "parentId": "19y70nfawm",
   "parentRowSpace": 10,
@@ -73,7 +85,7 @@
     "dropdown"
   ],
   "serverSideFiltering": false,
-  "sourceData": "{{ user_mapping_js.fetchuserMapping.data }}",
+  "sourceData": "{{ \n  main_tab.selectedTab === 'Events' \n    ? _.uniqBy(\n        (events_email.data || []).map(user => ({ \n          label: user.email,   // Shows the email in the UI\n          value: user.email    // Passes the email to the query\n        })), \n        'value'\n      )\n    : _.uniqBy(\n        (user_mapping_js.fetchuserMapping.data || []).map(user => ({ \n          label: user.username, // Shows the email/username in the UI\n          value: user.user_id   // Passes the numeric ID to the query\n        })), \n        'value'\n      )\n}}",
   "tags": [
     "Suggested",
     "Select"

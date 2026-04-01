@@ -9,17 +9,17 @@
       "formData": {
         "aggregate": {
           "arrayPipelines": {
-            "data": ""
+            "data": "[\n  {\n    \"$match\": {\n      \"email_date\": {\n        \"$gte\": {{ Math.floor(new Date(start_date.selectedDate).getTime() / 1) }},\n        \"$lte\": {{ Math.floor(new Date(end_date.selectedDate).getTime() / 1) }}\n      },\n      \"recipients\": {{ user_id.selectedOptionValue ? user_id.selectedOptionValue : { \"$exists\": true } }},\n      \"environment\": {{ env_select.selectedOptionValue || {\"$exists\": true} }},\n\t\t\t\"client_id\": {{ client_id.selectedOptionValue || { \"$exists\": true } }}\n    }\n  },\n  { \"$sort\": { \"email_date\": -1 } },\n  {\n    \"$project\": {\n      \"_id\": 0,\n      \"Email Date\": {\n        \"$cond\": {\n          \"if\": { \"$gt\": [\"$email_date\", 0] },\n          \"then\": {\n            \"$dateToString\": {\n              \"format\": \"%Y-%m-%d\",\n              \"date\": { \"$toDate\": \"$email_date\" }\n            }\n          },\n          \"else\": \"N/A\"\n        }\n      },\n      \"Workflow ID\": { \"$ifNull\": [\"$workflow_id\", \"N/A\"] },\n      \"Workflow Name\": { \"$ifNull\": [\"$workflow_name\", \"N/A\"] },\n      \"Subject\": { \"$ifNull\": [\"$subject\", \"N/A\"] },\n      \"Template Name\": { \"$ifNull\": [\"$template_name\", \"N/A\"] },\n      \"Client ID\": { \"$ifNull\": [\"$client_id\", \"N/A\"] },\n      \"Environment\": { \"$ifNull\": [\"$environment\", \"N/A\"] },\n      \"Recipients\": { \"$size\": { \"$ifNull\": [\"$recipients\", []] } },\n      \"Unique Opens\": { \"$size\": { \"$ifNull\": [\"$unique_open_emails\", []] } },\n      \"Unique Clicks\": { \"$size\": { \"$ifNull\": [\"$unique_click_ids\", []] } },\n      \"Delivered\": { \"$ifNull\": [\"$delivered_count\", 0] },\n      \"Opens\": { \"$ifNull\": [\"$open_count\", 0] },\n      \"Clicks\": { \"$ifNull\": [\"$click_count\", 0] },\n      \"Bounces\": { \"$ifNull\": [\"$bounce_count\", 0] },\n      \"Unsubscribes\": { \"$ifNull\": [\"$unsubscribe_count\", 0] }\n    }\n  }\n]"
           },
           "limit": {
-            "data": "10"
+            "data": "2000"
           }
         },
         "collection": {
           "data": "workflow_summaries"
         },
         "command": {
-          "data": "FIND"
+          "data": "AGGREGATE"
         },
         "count": {
           "query": {
@@ -44,13 +44,13 @@
         },
         "find": {
           "limit": {
-            "data": ""
+            "data": "2000"
           },
           "projection": {
             "data": ""
           },
           "query": {
-            "data": "[\n  {\n    \"$match\": {\n      \"email_date\": {\n        \"$gte\": {{ Math.floor(new Date(startDate.selectedDate).getTime() / 1) }},\n        \"$lte\": {{ Math.floor(new Date(endDate.selectedDate).getTime() / 1) }}\n      },\n      \"recipients\": {{ userSelect.selectedOptionValue ? userSelect.selectedOptionValue : { \"$exists\": true } }},\n            \"environment\": {{ envSelect.selectedOptionValue || {\"$exists\": true} }}\n    }\n  },\n  { \"$sort\": { \"email_date\": -1 } },\n  { \"$skip\": {{ (Table2.pageNo - 1) * 50 }} },\n  { \"$limit\": 50 },\n  {\n    \"$project\": {\n      \"_id\": 0,\n      \"Email Date\": {\n        \"$cond\": {\n          \"if\": { \"$gt\": [\"$email_date\", 0] },\n          \"then\": {\n            \"$dateToString\": {\n              \"format\": \"%Y-%m-%d\",\n              \"date\": { \"$toDate\": \"$email_date\" }\n            }\n          },\n          \"else\": \"N/A\"\n        }\n      },\n      \"Workflow ID\": { \"$ifNull\": [\"$workflow_id\", \"N/A\"] },\n      \"Workflow Name\": { \"$ifNull\": [\"$workflow_name\", \"N/A\"] },\n      \"Subject\": { \"$ifNull\": [\"$subject\", \"N/A\"] },\n      \"Template Name\": { \"$ifNull\": [\"$template_name\", \"N/A\"] },\n      \"Client ID\": { \"$ifNull\": [\"$client_id\", \"N/A\"] },\n            \"Environment\": { \"$ifNull\": [\"$environment\", \"N/A\"] },\n      \"Recipients\": { \"$size\": { \"$ifNull\": [\"$recipients\", []] } },\n      \"Unique Opens\": { \"$size\": { \"$ifNull\": [\"$unique_open_emails\", []] } },\n      \"Unique Clicks\": { \"$size\": { \"$ifNull\": [\"$unique_click_ids\", []] } },\n      \"Delivered\": { \"$ifNull\": [\"$delivered_count\", 0] },\n      \"Opens\": { \"$ifNull\": [\"$open_count\", 0] },\n      \"Clicks\": { \"$ifNull\": [\"$click_count\", 0] },\n      \"Bounces\": { \"$ifNull\": [\"$bounce_count\", 0] },\n      \"Unsubscribes\": { \"$ifNull\": [\"$unsubscribe_count\", 0] }\n    }\n  }\n]\n"
+            "data": "[\n  {\n    \"$match\": {\n      \"email_date\": {\n        \"$gte\": {{ Math.floor(new Date(start_date.selectedDate).getTime() / 1) }},\n        \"$lte\": {{ Math.floor(new Date(end_date.selectedDate).getTime() / 1) }}\n      },\n      \"recipients\": {{ user_id.selectedOptionValue ? user_id.selectedOptionValue : { \"$exists\": true } }},\n            \"environment\": {{ env_select.selectedOptionValue || {\"$exists\": true} }}\n    }\n  },\n  { \"$sort\": { \"email_date\": -1 } },\n  {\n    \"$project\": {\n      \"_id\": 0,\n      \"Email Date\": {\n        \"$cond\": {\n          \"if\": { \"$gt\": [\"$email_date\", 0] },\n          \"then\": {\n            \"$dateToString\": {\n              \"format\": \"%Y-%m-%d\",\n              \"date\": { \"$toDate\": \"$email_date\" }\n            }\n          },\n          \"else\": \"N/A\"\n        }\n      },\n      \"Workflow ID\": { \"$ifNull\": [\"$workflow_id\", \"N/A\"] },\n      \"Workflow Name\": { \"$ifNull\": [\"$workflow_name\", \"N/A\"] },\n      \"Subject\": { \"$ifNull\": [\"$subject\", \"N/A\"] },\n      \"Template Name\": { \"$ifNull\": [\"$template_name\", \"N/A\"] },\n      \"Client ID\": { \"$ifNull\": [\"$client_id\", \"N/A\"] },\n            \"Environment\": { \"$ifNull\": [\"$environment\", \"N/A\"] },\n      \"Recipients\": { \"$size\": { \"$ifNull\": [\"$recipients\", []] } },\n      \"Unique Opens\": { \"$size\": { \"$ifNull\": [\"$unique_open_emails\", []] } },\n      \"Unique Clicks\": { \"$size\": { \"$ifNull\": [\"$unique_click_ids\", []] } },\n      \"Delivered\": { \"$ifNull\": [\"$delivered_count\", 0] },\n      \"Opens\": { \"$ifNull\": [\"$open_count\", 0] },\n      \"Clicks\": { \"$ifNull\": [\"$click_count\", 0] },\n      \"Bounces\": { \"$ifNull\": [\"$bounce_count\", 0] },\n      \"Unsubscribes\": { \"$ifNull\": [\"$unsubscribe_count\", 0] }\n    }\n  }\n]\n"
           },
           "skip": {
             "data": ""
@@ -66,7 +66,7 @@
         },
         "misc": {
           "formToNativeQuery": {
-            "data": "{\n  \"find\": \"workflow_summaries\",\n  \"filter\": [\n  {\n    \"$match\": {\n      \"email_date\": {\n        \"$gte\": {{ Math.floor(new Date(startDate.selectedDate).getTime() / 1) }},\n        \"$lte\": {{ Math.floor(new Date(endDate.selectedDate).getTime() / 1) }}\n      },\n      \"recipients\": {{ userSelect.selectedOptionValue ? userSelect.selectedOptionValue : { \"$exists\": true } }},\n            \"environment\": {{ envSelect.selectedOptionValue || {\"$exists\": true} }}\n    }\n  },\n  { \"$sort\": { \"email_date\": -1 } },\n  { \"$skip\": {{ (Table2.pageNo - 1) * 50 }} },\n  { \"$limit\": 50 },\n  {\n    \"$project\": {\n      \"_id\": 0,\n      \"Email Date\": {\n        \"$cond\": {\n          \"if\": { \"$gt\": [\"$email_date\", 0] },\n          \"then\": {\n            \"$dateToString\": {\n              \"format\": \"%Y-%m-%d\",\n              \"date\": { \"$toDate\": \"$email_date\" }\n            }\n          },\n          \"else\": \"N/A\"\n        }\n      },\n      \"Workflow ID\": { \"$ifNull\": [\"$workflow_id\", \"N/A\"] },\n      \"Workflow Name\": { \"$ifNull\": [\"$workflow_name\", \"N/A\"] },\n      \"Subject\": { \"$ifNull\": [\"$subject\", \"N/A\"] },\n      \"Template Name\": { \"$ifNull\": [\"$template_name\", \"N/A\"] },\n      \"Client ID\": { \"$ifNull\": [\"$client_id\", \"N/A\"] },\n            \"Environment\": { \"$ifNull\": [\"$environment\", \"N/A\"] },\n      \"Recipients\": { \"$size\": { \"$ifNull\": [\"$recipients\", []] } },\n      \"Unique Opens\": { \"$size\": { \"$ifNull\": [\"$unique_open_emails\", []] } },\n      \"Unique Clicks\": { \"$size\": { \"$ifNull\": [\"$unique_click_ids\", []] } },\n      \"Delivered\": { \"$ifNull\": [\"$delivered_count\", 0] },\n      \"Opens\": { \"$ifNull\": [\"$open_count\", 0] },\n      \"Clicks\": { \"$ifNull\": [\"$click_count\", 0] },\n      \"Bounces\": { \"$ifNull\": [\"$bounce_count\", 0] },\n      \"Unsubscribes\": { \"$ifNull\": [\"$unsubscribe_count\", 0] }\n    }\n  }\n]\n,\n  \"limit\": 10,\n  \"batchSize\": 10\n}\n",
+            "data": "{\n  \"aggregate\": \"workflow_summaries\",\n  \"pipeline\": [\n  {\n    \"$match\": {\n      \"email_date\": {\n        \"$gte\": {{ Math.floor(new Date(start_date.selectedDate).getTime() / 1) }},\n        \"$lte\": {{ Math.floor(new Date(end_date.selectedDate).getTime() / 1) }}\n      },\n      \"recipients\": {{ user_id.selectedOptionValue ? user_id.selectedOptionValue : { \"$exists\": true } }},\n      \"environment\": {{ env_select.selectedOptionValue || {\"$exists\": true} }},\n\t\t\t\"client_id\": {{ client_id.selectedOptionValue || { \"$exists\": true } }}\n    }\n  },\n  { \"$sort\": { \"email_date\": -1 } },\n  {\n    \"$project\": {\n      \"_id\": 0,\n      \"Email Date\": {\n        \"$cond\": {\n          \"if\": { \"$gt\": [\"$email_date\", 0] },\n          \"then\": {\n            \"$dateToString\": {\n              \"format\": \"%Y-%m-%d\",\n              \"date\": { \"$toDate\": \"$email_date\" }\n            }\n          },\n          \"else\": \"N/A\"\n        }\n      },\n      \"Workflow ID\": { \"$ifNull\": [\"$workflow_id\", \"N/A\"] },\n      \"Workflow Name\": { \"$ifNull\": [\"$workflow_name\", \"N/A\"] },\n      \"Subject\": { \"$ifNull\": [\"$subject\", \"N/A\"] },\n      \"Template Name\": { \"$ifNull\": [\"$template_name\", \"N/A\"] },\n      \"Client ID\": { \"$ifNull\": [\"$client_id\", \"N/A\"] },\n      \"Environment\": { \"$ifNull\": [\"$environment\", \"N/A\"] },\n      \"Recipients\": { \"$size\": { \"$ifNull\": [\"$recipients\", []] } },\n      \"Unique Opens\": { \"$size\": { \"$ifNull\": [\"$unique_open_emails\", []] } },\n      \"Unique Clicks\": { \"$size\": { \"$ifNull\": [\"$unique_click_ids\", []] } },\n      \"Delivered\": { \"$ifNull\": [\"$delivered_count\", 0] },\n      \"Opens\": { \"$ifNull\": [\"$open_count\", 0] },\n      \"Clicks\": { \"$ifNull\": [\"$click_count\", 0] },\n      \"Bounces\": { \"$ifNull\": [\"$bounce_count\", 0] },\n      \"Unsubscribes\": { \"$ifNull\": [\"$unsubscribe_count\", 0] }\n    }\n  }\n],\n  \"cursor\": {}\n}\n",
             "status": "SUCCESS"
           }
         },
@@ -98,9 +98,12 @@
     "dynamicBindingPathList": [
       {
         "key": "formData.find.query.data"
+      },
+      {
+        "key": "formData.aggregate.arrayPipelines.data"
       }
     ],
-    "executeOnLoad": false,
+    "executeOnLoad": true,
     "name": "workflow_summary_agg_qry",
     "pageId": "Usage Logs",
     "userSetOnLoad": false

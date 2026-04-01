@@ -18,6 +18,12 @@
     },
     {
       "key": "isDisabled"
+    },
+    {
+      "key": "optionValue"
+    },
+    {
+      "key": "optionLabel"
     }
   ],
   "dynamicHeight": "FIXED",
@@ -27,6 +33,12 @@
     },
     {
       "key": "isDisabled"
+    },
+    {
+      "key": "optionValue"
+    },
+    {
+      "key": "optionLabel"
     }
   ],
   "dynamicTriggerPathList": [],
@@ -61,8 +73,8 @@
     "selectionBGCSSVar": "--on-canvas-ui-widget-selection",
     "selectionColorCSSVar": "--on-canvas-ui-widget-focus"
   },
-  "optionLabel": "name",
-  "optionValue": "id",
+  "optionLabel": "{{client_id.sourceData.map((item) => ( 'label' ))}}",
+  "optionValue": "{{client_id.sourceData.map((item) => ( 'value' ))}}",
   "parentColumnSpace": 13.015625,
   "parentId": "19y70nfawm",
   "parentRowSpace": 10,
@@ -74,7 +86,7 @@
     "dropdown"
   ],
   "serverSideFiltering": false,
-  "sourceData": "{{ client_mapping_js.fetchClientMapping.data }}",
+  "sourceData": "{{ \n  main_tab.selectedTab === 'Events' \n    ? (client_guid_mapping_js.fetchClientMapping.data || []).map(client => ({\n        label: client.name,\n        value: client.guid\n      }))\n    : (client_mapping_js.fetchClientMapping.data || []).map(client => ({\n        label: client.name,\n        value: client.id\n      }))\n}}",
   "tags": [
     "Suggested",
     "Select"
