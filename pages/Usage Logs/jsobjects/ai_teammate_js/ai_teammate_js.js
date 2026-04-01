@@ -7,7 +7,7 @@ export default {
 				$gte: new Date(start_date.selectedDate).getTime(),
 				$lte: new Date(end_date.selectedDate).getTime(),
 			},
-			source: {$in: ["INTERNAL_GENERATE"] }
+			source: {$in:["SLACK_GENERATE", "MICROSOFT_TEAMS_GENERATE", "GOOGLE_CHAT_GENERATE", "WEB_GENERATE"] }
 		};
 
 		if (client_id && client_id?.selectedOptionValue) {
