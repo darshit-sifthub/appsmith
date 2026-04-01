@@ -26,7 +26,7 @@
         "key": "body"
       }
     ],
-    "executeOnLoad": true,
+    "executeOnLoad": false,
     "fullyQualifiedName": "client_guid_mapping_js.getClientMapping",
     "name": "getClientMapping",
     "pageId": "Usage Logs",

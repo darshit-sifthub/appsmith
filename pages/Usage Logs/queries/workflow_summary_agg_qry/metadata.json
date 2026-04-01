@@ -103,9 +103,9 @@
         "key": "formData.aggregate.arrayPipelines.data"
       }
     ],
-    "executeOnLoad": true,
+    "executeOnLoad": false,
     "name": "workflow_summary_agg_qry",
     "pageId": "Usage Logs",
-    "userSetOnLoad": false
+    "userSetOnLoad": true
   }
 }
