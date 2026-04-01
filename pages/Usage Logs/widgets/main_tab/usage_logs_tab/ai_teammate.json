@@ -4,7 +4,7 @@
   "borderColor": "#E0DEDE",
   "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
   "borderWidth": "1",
-  "bottomRow": 152,
+  "bottomRow": 151,
   "boxShadow": "{{appsmith.theme.boxShadow.appBoxShadow}}",
   "canFreezeColumn": true,
   "childStylesheet": {
@@ -45,12 +45,11 @@
     "conversation_counter",
     "status",
     "total_time_seconds",
-    "tx_consumed",
     "preference",
     "mode",
     "executed_intents_with_usage"
   ],
-  "columnUpdatedAt": 1769057949136,
+  "columnUpdatedAt": 1774969579619,
   "columnWidthMap": {
     "conversation_counter": 187,
     "conversation_id": 292,
@@ -128,9 +127,6 @@
       "key": "primaryColumns.total_time_seconds.computedValue"
     },
     {
-      "key": "primaryColumns.tx_consumed.computedValue"
-    },
-    {
       "key": "primaryColumns.customColumn2.computedValue"
     },
     {
@@ -168,7 +164,7 @@
   "isVisibleSearch": true,
   "key": "8ojmxo0unk",
   "label": "Data",
-  "leftColumn": 0,
+  "leftColumn": 1,
   "minWidth": 450,
   "mobileBottomRow": 27,
   "mobileLeftColumn": 0,
@@ -720,40 +716,6 @@
       "verticalAlignment": "CENTER",
       "width": 150
     },
-    "tx_consumed": {
-      "alias": "tx_consumed",
-      "allowCellWrapping": false,
-      "allowSameOptionsInNewRow": true,
-      "cellBackground": "",
-      "columnType": "number",
-      "computedValue": "{{ai_teammate.processedTableData.map((currentRow, currentIndex) => ( currentRow[\"tx_consumed\"]))}}",
-      "currencyCode": "USD",
-      "decimals": 0,
-      "enableFilter": true,
-      "enableSort": true,
-      "fontStyle": "",
-      "horizontalAlignment": "LEFT",
-      "id": "tx_consumed",
-      "index": 9,
-      "isCellEditable": false,
-      "isCellVisible": true,
-      "isDerived": false,
-      "isDisabled": false,
-      "isDiscardVisible": true,
-      "isEditable": false,
-      "isSaveVisible": true,
-      "isVisible": true,
-      "label": "Transactions",
-      "notation": "standard",
-      "originalId": "tx_consumed",
-      "sticky": "",
-      "textColor": "",
-      "textSize": "0.875rem",
-      "thousandSeparator": true,
-      "validation": {},
-      "verticalAlignment": "CENTER",
-      "width": 150
-    },
     "user_id": {
       "alias": "user_id",
       "allowCellWrapping": false,
@@ -795,7 +757,7 @@
   "searchKey": "",
   "tableData": "{{ clean_data_for_ai_teammate_js.cleanTableDataForAnswer() }}",
   "textSize": "0.875rem",
-  "topRow": 1,
+  "topRow": 0,
   "totalRecordsCount": 0,
   "type": "TABLE_WIDGET_V2",
   "version": 2,
