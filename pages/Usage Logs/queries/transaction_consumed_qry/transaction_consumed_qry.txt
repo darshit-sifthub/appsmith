@@ -1,1 +1,1 @@
-{{ license_count_js.getRedisKeys() }}
+{{license_count_js.getRedisKeys()}}
