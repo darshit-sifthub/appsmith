@@ -87,7 +87,7 @@
         }
       },
       "paginationType": "NONE",
-      "timeoutInMillisecond": 100000
+      "timeoutInMillisecond": 300000
     },
     "confirmBeforeExecute": false,
     "datasource": {
