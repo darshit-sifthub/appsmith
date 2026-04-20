@@ -54,6 +54,7 @@
   "labelAlignment": "left",
   "labelPosition": "Left",
   "labelTextSize": "0.875rem",
+  "labelTooltip": "",
   "labelWidth": "4",
   "leftColumn": 0,
   "maxDate": "{{ moment().toISOString() }}",

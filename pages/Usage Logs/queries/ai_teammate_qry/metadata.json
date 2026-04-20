@@ -57,7 +57,7 @@
             "data": ""
           },
           "sort": {
-            "data": "{ created_at: -1 }"
+            "data": ""
           }
         },
         "insert": {
@@ -67,7 +67,7 @@
         },
         "misc": {
           "formToNativeQuery": {
-            "data": "{\n  \"find\": \"conversation_history\",\n  \"filter\": {{ ai_teammate_js.getMatchQuery() }},\n  \"sort\": { created_at: -1 },\n  \"limit\": 2000,\n  \"batchSize\": 2000\n}\n",
+            "data": "{\n  \"find\": \"conversation_history\",\n  \"filter\": {{ ai_teammate_js.getMatchQuery() }},\n  \"limit\": 2000,\n  \"batchSize\": 2000\n}\n",
             "status": "SUCCESS"
           }
         },
@@ -87,7 +87,7 @@
         }
       },
       "paginationType": "NONE",
-      "timeoutInMillisecond": 30000
+      "timeoutInMillisecond": 60000
     },
     "confirmBeforeExecute": false,
     "datasource": {
