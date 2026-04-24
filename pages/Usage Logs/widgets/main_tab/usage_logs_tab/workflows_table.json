@@ -36,10 +36,9 @@
     "event_subject",
     "attendee_emails",
     "created_at",
-    "email_content",
     "tx_consumed"
   ],
-  "columnUpdatedAt": 1774722900535,
+  "columnUpdatedAt": 1776960536746,
   "columnWidthMap": {
     "attendee_emails": 301,
     "buying_signal_text": 248,
@@ -97,9 +96,6 @@
     },
     {
       "key": "primaryColumns.workflow_name.computedValue"
-    },
-    {
-      "key": "primaryColumns.email_content.computedValue"
     },
     {
       "key": "primaryColumns.tx_consumed.computedValue"
@@ -233,40 +229,6 @@
       "notation": "standard",
       "originalId": "created_at",
       "outputFormat": "{{workflows_table.processedTableData.map((currentRow, currentIndex) => (  moment.utc(currentRow.created_at ).format(\"YYYY-MM-DD HH:mm:ss [UTC]\") ))}}",
-      "sticky": "",
-      "textColor": "",
-      "textSize": "0.875rem",
-      "thousandSeparator": true,
-      "validation": {},
-      "verticalAlignment": "CENTER",
-      "width": 150
-    },
-    "email_content": {
-      "alias": "email_content",
-      "allowCellWrapping": false,
-      "allowSameOptionsInNewRow": true,
-      "cellBackground": "",
-      "columnType": "text",
-      "computedValue": "{{workflows_table.processedTableData.map((currentRow, currentIndex) => ( currentRow[\"email_content\"]))}}",
-      "currencyCode": "USD",
-      "decimals": 0,
-      "enableFilter": true,
-      "enableSort": true,
-      "fontStyle": "",
-      "horizontalAlignment": "LEFT",
-      "id": "email_content",
-      "index": 2,
-      "isCellEditable": false,
-      "isCellVisible": true,
-      "isDerived": false,
-      "isDisabled": false,
-      "isDiscardVisible": true,
-      "isEditable": false,
-      "isSaveVisible": true,
-      "isVisible": true,
-      "label": "Email",
-      "notation": "standard",
-      "originalId": "email_content",
       "sticky": "",
       "textColor": "",
       "textSize": "0.875rem",

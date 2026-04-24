@@ -5,7 +5,7 @@
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "SELECT um.username as username, um.first_name as first_name, puam.client_id , puam.last_login_dt as last_login, puam.created_dt as created_dt from user_master um inner join product_user_access_mapping puam on um.id = puam.user_id and puam.status = 'ACTIVE' and puam.is_active = 1 and puam.is_delete = 0 inner join client_master cm on cm.id = puam.client_id and cm.expire_at > now() where um.`type` = 'PRODUCT' and um.is_active = 1 and um.is_delete = 0\n{{ active_users_filter.getMatchQuery() }}\norder by puam.created_dt desc;",
+      "body": "SELECT um.username as username, um.first_name as first_name, puam.client_id , role.name as role, puam.last_login_dt as last_login, puam.created_dt as created_dt from user_master um inner join product_user_access_mapping puam on um.id = puam.user_id and puam.status = 'ACTIVE' and puam.is_active = 1 and puam.is_delete = 0 inner join user_role_master role on role.id = puam.user_role_id inner join client_master cm on cm.id = puam.client_id and cm.expire_at > now() where um.`type` = 'PRODUCT' and um.is_active = 1 and um.is_delete = 0\n{{ active_users_filter.getMatchQuery() }}\norder by puam.created_dt desc;",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [
