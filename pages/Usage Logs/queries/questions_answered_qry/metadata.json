@@ -9,7 +9,7 @@
       "formData": {
         "aggregate": {
           "arrayPipelines": {
-            "data": "[\n  {\n    $match: {{ question_answered_filter_js.getMatchQuery() }}\n  },\n  { $unwind: \"$response.answers\" },\n  {\n    $project: {\n      _id: 1,\n\t\t\teventId: 1,\n      orgQuery: 1,\n\t\t\tcleaned_query: 1,\n\t\t\tinstruction: 1,\n      created: 1,\n      clientId: 1,\n      userId: 1,\n      generateSource: 1,\n\t\t\ttx_consumed: 1,\n      answerText: \"$response.answers.text\",\n      score: \"$response.answers.score\",\n\t\t\tpartialAnswer: \"$response.answers.partialAnswer\",\n\t\t\tpreference: 1\n      answerSources: {\n        $map: {\n          input: \"$response.answers.sources\",\n          as: \"source\",\n          in: \"$$source.name\",\n        },\n      },\n    }\n  },\n\t{ $sort: { _id: -1, score: -1 } },\n]"
+            "data": "[\n\t{\n\t\t$match: {{ question_answered_filter_js.getMatchQuery() }}\n\t},\n\t\t{ $unwind: \"$response.answers\" },\n\t{\n\t\t$project: {\n\t\t\t_id: 1,\n\t\t\teventId: 1,\n\t\t\torgQuery: 1,\n\t\t\tcleaned_query: 1,\n\t\t\tinstruction: 1,\n\t\t\tcreated: 1,\n\t\t\tclientId: 1,\n\t\t\tuserId: 1,\n\t\t\tgenerateSource: 1,\n\t\t\tgenerationFlow: 1,\n\t\t\ttx_consumed: 1,\n\t\t\tanswerText: \"$response.answers.text\",\n\t\t\tscore: \"$response.answers.score\",\n\t\t\tpartialAnswer: \"$response.answers.partialAnswer\",\n\t\t\tpreference: 1\n\t\t\tanswerSources: {\n\t\t\t$map: {\n\t\t\tinput: \"$response.answers.sources\",\n\t\t\tas: \"source\",\n\t\t\tin: \"$$source.name\",\n\t\t},\n\t},\n\t}\n\t},\n\t{ $sort: { _id: -1, score: -1 } },\n]"
           },
           "limit": {
             "data": "2000"
@@ -66,7 +66,7 @@
         },
         "misc": {
           "formToNativeQuery": {
-            "data": "{\n  \"aggregate\": \"generate_audit_log\",\n  \"pipeline\": [\n  {\n    $match: {{ question_answered_filter_js.getMatchQuery() }}\n  },\n  { $unwind: \"$response.answers\" },\n  {\n    $project: {\n      _id: 1,\n\t\t\teventId: 1,\n      orgQuery: 1,\n\t\t\tcleaned_query: 1,\n\t\t\tinstruction: 1,\n      created: 1,\n      clientId: 1,\n      userId: 1,\n      generateSource: 1,\n\t\t\ttx_consumed: 1,\n      answerText: \"$response.answers.text\",\n      score: \"$response.answers.score\",\n\t\t\tpartialAnswer: \"$response.answers.partialAnswer\",\n\t\t\tpreference: 1\n      answerSources: {\n        $map: {\n          input: \"$response.answers.sources\",\n          as: \"source\",\n          in: \"$$source.name\",\n        },\n      },\n    }\n  },\n\t{ $sort: { _id: -1, score: -1 } },\n],\n  \"cursor\": {}\n}\n",
+            "data": "{\n  \"aggregate\": \"generate_audit_log\",\n  \"pipeline\": [\n\t{\n\t\t$match: {{ question_answered_filter_js.getMatchQuery() }}\n\t},\n\t\t{ $unwind: \"$response.answers\" },\n\t{\n\t\t$project: {\n\t\t\t_id: 1,\n\t\t\teventId: 1,\n\t\t\torgQuery: 1,\n\t\t\tcleaned_query: 1,\n\t\t\tinstruction: 1,\n\t\t\tcreated: 1,\n\t\t\tclientId: 1,\n\t\t\tuserId: 1,\n\t\t\tgenerateSource: 1,\n\t\t\tgenerationFlow: 1,\n\t\t\ttx_consumed: 1,\n\t\t\tanswerText: \"$response.answers.text\",\n\t\t\tscore: \"$response.answers.score\",\n\t\t\tpartialAnswer: \"$response.answers.partialAnswer\",\n\t\t\tpreference: 1\n\t\t\tanswerSources: {\n\t\t\t$map: {\n\t\t\tinput: \"$response.answers.sources\",\n\t\t\tas: \"source\",\n\t\t\tin: \"$$source.name\",\n\t\t},\n\t},\n\t}\n\t},\n\t{ $sort: { _id: -1, score: -1 } },\n],\n  \"cursor\": {}\n}\n",
             "status": "SUCCESS"
           }
         },
