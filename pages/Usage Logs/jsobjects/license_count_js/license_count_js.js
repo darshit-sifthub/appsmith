@@ -35,21 +35,19 @@ export default {
 			});
 		}
 
-		// Merge all data together
 		return total_licenses_qry.data.map((totalLicense) => {
 			const activeLicense = active_licenses_qry.data.find(
 				active => active.client_id === totalLicense.id
 			);
-
 			const redisData = transactionData[totalLicense.id] || 
 						{ active_transactions: null };
-
 			return {
 				client_id: totalLicense.id,
 				total_licenses: totalLicense.total_licenses,
 				total_transactions: totalLicense.total_transactions, // Keep original total_transactions
 				active_transactions: redisData.active_transactions, // Use Redis data for active_transactions
-				active_licenses: activeLicense ? activeLicense.active_licenses : 0
+				active_licenses: activeLicense ? activeLicense.active_licenses : 0,
+				start_date: totalLicense.start_date
 			};
 		});
 	}

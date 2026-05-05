@@ -5,7 +5,7 @@
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "SELECT\n    spcc.client_id AS id,\n    CASE WHEN spcc.key = 'user_limit' THEN spcc.value END AS total_licenses,\n    CASE WHEN spcc.key = 'transaction_limit' THEN spcc.value END AS total_transactions\nFROM\n    subscription_plan_client_config spcc \nINNER JOIN \n    client_master cm ON cm.id = spcc.client_id AND cm.is_delete = 0 AND cm.is_active = 1\nWHERE\n    spcc.key IN ('user_limit', 'transaction_limit')\nGROUP BY\n    spcc.client_id",
+      "body": "SELECT\n    spcc.client_id AS id,\n    CASE WHEN spcc.key = 'user_limit' THEN spcc.value END AS total_licenses,\n    CASE WHEN spcc.key = 'transaction_limit' THEN spcc.value END AS total_transactions,\n\t\tcm.start_date\nFROM\n    subscription_plan_client_config spcc \nINNER JOIN \n    client_master cm ON cm.id = spcc.client_id AND cm.is_delete = 0 AND cm.is_active = 1\nWHERE\n    spcc.key IN ('user_limit', 'transaction_limit')\nGROUP BY\n    spcc.client_id",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [

@@ -1,7 +1,8 @@
 SELECT
     spcc.client_id AS id,
     CASE WHEN spcc.key = 'user_limit' THEN spcc.value END AS total_licenses,
-    CASE WHEN spcc.key = 'transaction_limit' THEN spcc.value END AS total_transactions
+    CASE WHEN spcc.key = 'transaction_limit' THEN spcc.value END AS total_transactions,
+		cm.start_date
 FROM
     subscription_plan_client_config spcc 
 INNER JOIN 
