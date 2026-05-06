@@ -4,7 +4,7 @@
   "borderColor": "#E0DEDE",
   "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
   "borderWidth": "1",
-  "bottomRow": 164,
+  "bottomRow": 163,
   "boxShadow": "{{appsmith.theme.boxShadow.appBoxShadow}}",
   "canFreezeColumn": true,
   "childStylesheet": {
@@ -37,10 +37,9 @@
     "total",
     "answered",
     "tx_consumed",
-    "source",
-    "mode"
+    "source"
   ],
-  "columnUpdatedAt": 1777401470093,
+  "columnUpdatedAt": 1778044023046,
   "columnWidthMap": {
     "_id": 367,
     "answered": 211,
@@ -90,9 +89,6 @@
     },
     {
       "key": "primaryColumns.source.computedValue"
-    },
-    {
-      "key": "primaryColumns.mode.computedValue"
     }
   ],
   "dynamicPropertyPathList": [
@@ -219,40 +215,6 @@
       "originalId": "date",
       "outputFormat": "DD/MM/YYYY",
       "sticky": "",
-      "textSize": "0.875rem",
-      "thousandSeparator": true,
-      "validation": {},
-      "verticalAlignment": "CENTER",
-      "width": 150
-    },
-    "mode": {
-      "alias": "mode",
-      "allowCellWrapping": false,
-      "allowSameOptionsInNewRow": true,
-      "cellBackground": "",
-      "columnType": "text",
-      "computedValue": "{{Table4.processedTableData.map((currentRow, currentIndex) => ( currentRow[\"mode\"]))}}",
-      "currencyCode": "USD",
-      "decimals": 0,
-      "enableFilter": true,
-      "enableSort": true,
-      "fontStyle": "",
-      "horizontalAlignment": "LEFT",
-      "id": "mode",
-      "index": 7,
-      "isCellEditable": false,
-      "isCellVisible": true,
-      "isDerived": false,
-      "isDisabled": false,
-      "isDiscardVisible": true,
-      "isEditable": false,
-      "isSaveVisible": true,
-      "isVisible": true,
-      "label": "mode",
-      "notation": "standard",
-      "originalId": "mode",
-      "sticky": "",
-      "textColor": "",
       "textSize": "0.875rem",
       "thousandSeparator": true,
       "validation": {},
@@ -399,7 +361,7 @@
   "searchKey": "",
   "tableData": "{{generate_qry.data}}",
   "textSize": "0.875rem",
-  "topRow": 11,
+  "topRow": 10,
   "totalRecordsCount": 0,
   "type": "TABLE_WIDGET_V2",
   "version": 2,
