@@ -45,10 +45,9 @@
     "generateSource",
     "score",
     "preference",
-    "tx_consumed",
     "Mode"
   ],
-  "columnUpdatedAt": 1778045569815,
+  "columnUpdatedAt": 1778047391997,
   "columnWidthMap": {
     "_id": 204,
     "answerOptionsPreCheckResponse": 205,
@@ -130,9 +129,6 @@
       "key": "primaryColumns.preference.computedValue"
     },
     {
-      "key": "primaryColumns.tx_consumed.computedValue"
-    },
-    {
       "key": "primaryColumns.Mode.computedValue"
     }
   ],
@@ -193,7 +189,7 @@
       "allowSameOptionsInNewRow": true,
       "cellBackground": "",
       "columnType": "text",
-      "computedValue": "{{questions_answered.processedTableData.map((currentRow, currentIndex) => ( currentRow[\"Mode\"]))}}",
+      "computedValue": "{{questions_answered.processedTableData.map((currentRow, currentIndex) => ( \n{\n  \"AI_TEAMMATE\": \"Reasoning\",\n  \"RFP\": \"Standard\"\n}[currentRow.Mode] || currentRow.Mode\n))}}",
       "currencyCode": "USD",
       "decimals": 0,
       "enableFilter": true,
@@ -656,40 +652,6 @@
       "label": "Score",
       "notation": "standard",
       "originalId": "score",
-      "sticky": "",
-      "textColor": "",
-      "textSize": "0.875rem",
-      "thousandSeparator": true,
-      "validation": {},
-      "verticalAlignment": "CENTER",
-      "width": 150
-    },
-    "tx_consumed": {
-      "alias": "tx_consumed",
-      "allowCellWrapping": false,
-      "allowSameOptionsInNewRow": true,
-      "cellBackground": "",
-      "columnType": "number",
-      "computedValue": "{{questions_answered.processedTableData.map((currentRow, currentIndex) => ( currentRow[\"tx_consumed\"]))}}",
-      "currencyCode": "USD",
-      "decimals": 0,
-      "enableFilter": true,
-      "enableSort": true,
-      "fontStyle": "",
-      "horizontalAlignment": "LEFT",
-      "id": "tx_consumed",
-      "index": 13,
-      "isCellEditable": false,
-      "isCellVisible": true,
-      "isDerived": false,
-      "isDisabled": false,
-      "isDiscardVisible": true,
-      "isEditable": false,
-      "isSaveVisible": true,
-      "isVisible": true,
-      "label": "tx_consumed",
-      "notation": "standard",
-      "originalId": "tx_consumed",
       "sticky": "",
       "textColor": "",
       "textSize": "0.875rem",
