@@ -42,13 +42,13 @@
     "answerText",
     "partialAnswer",
     "answerSources",
-    "generationFlow",
     "generateSource",
     "score",
     "preference",
-    "tx_consumed"
+    "tx_consumed",
+    "Mode"
   ],
-  "columnUpdatedAt": 1777400549962,
+  "columnUpdatedAt": 1778045569815,
   "columnWidthMap": {
     "_id": 204,
     "answerOptionsPreCheckResponse": 205,
@@ -130,10 +130,10 @@
       "key": "primaryColumns.preference.computedValue"
     },
     {
-      "key": "primaryColumns.generationFlow.computedValue"
+      "key": "primaryColumns.tx_consumed.computedValue"
     },
     {
-      "key": "primaryColumns.tx_consumed.computedValue"
+      "key": "primaryColumns.Mode.computedValue"
     }
   ],
   "dynamicPropertyPathList": [
@@ -187,6 +187,40 @@
   "parentId": "7mj8rjp4gj",
   "parentRowSpace": 10,
   "primaryColumns": {
+    "Mode": {
+      "alias": "Mode",
+      "allowCellWrapping": false,
+      "allowSameOptionsInNewRow": true,
+      "cellBackground": "",
+      "columnType": "text",
+      "computedValue": "{{questions_answered.processedTableData.map((currentRow, currentIndex) => ( currentRow[\"Mode\"]))}}",
+      "currencyCode": "USD",
+      "decimals": 0,
+      "enableFilter": true,
+      "enableSort": true,
+      "fontStyle": "",
+      "horizontalAlignment": "LEFT",
+      "id": "Mode",
+      "index": 6,
+      "isCellEditable": false,
+      "isCellVisible": true,
+      "isDerived": false,
+      "isDisabled": false,
+      "isDiscardVisible": true,
+      "isEditable": false,
+      "isSaveVisible": true,
+      "isVisible": true,
+      "label": "Mode",
+      "notation": "standard",
+      "originalId": "Mode",
+      "sticky": "",
+      "textColor": "",
+      "textSize": "0.875rem",
+      "thousandSeparator": true,
+      "validation": {},
+      "verticalAlignment": "CENTER",
+      "width": 150
+    },
     "_id": {
       "alias": "_id",
       "allowCellWrapping": false,
@@ -452,41 +486,6 @@
       "label": "Initiated from",
       "notation": "standard",
       "originalId": "generateSource",
-      "sticky": "",
-      "textColor": "",
-      "textSize": "0.875rem",
-      "thousandSeparator": true,
-      "validation": {},
-      "verticalAlignment": "CENTER",
-      "width": 150
-    },
-    "generationFlow": {
-      "alias": "generationFlow",
-      "allowCellWrapping": false,
-      "allowSameOptionsInNewRow": true,
-      "cellBackground": "",
-      "columnType": "select",
-      "computedValue": "{{questions_answered.processedTableData.map((currentRow, currentIndex) => ( currentRow[\"generationFlow\"] || \"RFP\"))}}",
-      "currencyCode": "USD",
-      "decimals": 0,
-      "enableFilter": true,
-      "enableSort": true,
-      "fontStyle": "",
-      "horizontalAlignment": "LEFT",
-      "id": "generationFlow",
-      "index": 6,
-      "isCellEditable": false,
-      "isCellVisible": true,
-      "isDerived": false,
-      "isDisabled": false,
-      "isDiscardVisible": true,
-      "isEditable": false,
-      "isSaveVisible": true,
-      "isVisible": true,
-      "label": "Mode",
-      "notation": "standard",
-      "originalId": "generationFlow",
-      "selectOptions": "[\n{\n\"label\": \"Standard\",\n\"value\": \"RFP\"\n},\n{\n\"label\": \"Reasoning\",\n\"value\": \"AI_TEAMMATE\"\n}\n]",
       "sticky": "",
       "textColor": "",
       "textSize": "0.875rem",
