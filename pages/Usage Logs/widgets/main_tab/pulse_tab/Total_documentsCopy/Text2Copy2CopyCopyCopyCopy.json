@@ -41,7 +41,7 @@
   "responsiveBehavior": "fill",
   "rightColumn": 39,
   "shouldTruncate": false,
-  "text": "{{ (pulse_stats.data?.[0]?.total_active_secs ?? \"-\") }}",
+  "text": "{{ pulse_stats.data?.[0]?.total_active_secs != null \n\t\t? Number(pulse_stats.data[0].total_active_secs).toFixed(2) \n\t\t: \"-\" }}",
   "textAlign": "LEFT",
   "textColor": "#231F20",
   "topRow": 0,
