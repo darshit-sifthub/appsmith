@@ -20,5 +20,13 @@ export default {
 	getuserMapping(user_id) {
 		const user = this.userMapping.filter((_user) => _user.user_id === user_id);
 		return user?.[0]?.username || 'Unknown';  // Return the variable value
+	},
+
+	mapUsers(ids) {
+		const mapping = this.fetchuserMapping.data || [];
+		const parsed = typeof ids === 'string' ? JSON.parse(ids) : (ids || []);
+		return parsed.flat(Infinity)
+			.map(id => mapping.find(u => String(u.user_id) === String(id))?.username || 'Unknown')
+			.join(', ');
 	}
 }

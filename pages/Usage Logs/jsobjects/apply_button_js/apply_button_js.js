@@ -11,22 +11,24 @@ export default {
 
 		// Check if the selected main tab is 'Usage Logs', 'Key numbers', 'Knowledge', 'Developer' to capture sub-tab selection
 		if (activeMainTab === 'Usage Logs') {
-				activeSubTab = usage_logs_tab.selectedTab;
-				activeSubSubTab = answer_tab.selectedTab; // e.g., 'Questions Answered', 'No information found'
+			activeSubTab = usage_logs_tab.selectedTab;
+			activeSubSubTab = answer_tab.selectedTab; // e.g., 'Questions Answered', 'No information found'
 		} else if (activeMainTab === 'Key numbers') {
-				activeSubTab = key_numbers_tab.selectedTab;
+			activeSubTab = key_numbers_tab.selectedTab;
 		} else if (activeMainTab === 'Knowledge') {
-				activeSubTab = knowledge_tab.selectedTab; // e.g., 'Active documents', 'Connectors', 'QnA'
-				// } else if (activeMainTab === 'Developer') {
-				//   activeSubTab = developer_tab.selectedTab; // e.g., 'RAG', 'RAG Search'
+			activeSubTab = knowledge_tab.selectedTab; // e.g., 'Active documents', 'Connectors', 'QnA'
+			// } else if (activeMainTab === 'Developer') {
+			//   activeSubTab = developer_tab.selectedTab; // e.g., 'RAG', 'RAG Search'
 		} else if (activeMainTab === 'User') {
-				activeSubTab = user_tab.selectedTab;
+			activeSubTab = user_tab.selectedTab;
 		} else if (activeMainTab === 'Account') {
-				activeSubTab = account_tab.selectedTab;
+			activeSubTab = account_tab.selectedTab;
 		} else if (activeMainTab === 'Workflows') {
-				activeSubTab = workflow_tab.selectedTab;
+			activeSubTab = workflow_tab.selectedTab;
 		} else if (activeMainTab === 'Events') {
-				activeSubTab = events_tab.selectedTab;
+			activeSubTab = events_tab.selectedTab;
+		} else if (activeMainTab === 'Pulse') {
+			activeSubTab = pulse_tab.selectedTab;
 		}
 
 		// Logic to run specific queries based on selected tabs
@@ -47,6 +49,8 @@ export default {
 				return this.Workflows(activeSubTab);
 			case 'Events':
 				return this.Events(activeSubTab);
+			case 'Pulse':
+				return this.Pulse(activeSubTab);
 			default:
 				showAlert("No valid main tab selected.");
 		}
@@ -228,6 +232,26 @@ export default {
 				return events_qry.run();
 			case 'Aggregated':
 				return workflow_summary_agg_qry.run();
+			default:
+				showAlert("No valid sub-tab selected under 'Events'.");
+		}
+	},
+
+	Pulse(activeSubTab) {
+		switch (activeSubTab) {
+			case 'Pulse':
+				return Promise.all([
+					pulse_stats.run(),
+					pulse_list.run()
+				])
+					.then(([result1, result2]) => {
+					console.log("Both pulse queries executed successfully!");
+					return { result1, result2 }; // Return both results
+				})
+					.catch((error) => {
+					console.error("Error running queries:", error);
+					return { error }; // Handle errors gracefully
+				});
 			default:
 				showAlert("No valid sub-tab selected under 'Events'.");
 		}

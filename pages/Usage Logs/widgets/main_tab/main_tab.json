@@ -374,6 +374,51 @@
       "version": 1,
       "widgetId": "wu7jx06bc6",
       "widgetName": "Canvas35"
+    },
+    {
+      "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
+      "bottomRow": 1570,
+      "boxShadow": "{{appsmith.theme.boxShadow.appBoxShadow}}",
+      "canExtend": false,
+      "containerStyle": "none",
+      "detachFromLayout": true,
+      "dynamicBindingPathList": [
+        {
+          "key": "borderRadius"
+        },
+        {
+          "key": "boxShadow"
+        }
+      ],
+      "dynamicHeight": "AUTO_HEIGHT",
+      "dynamicTriggerPathList": [],
+      "flexLayers": [],
+      "isLoading": false,
+      "isVisible": true,
+      "key": "uxhv88i1y0",
+      "leftColumn": 0,
+      "maxDynamicHeight": 9000,
+      "minDynamicHeight": 4,
+      "minHeight": 1610,
+      "minWidth": 450,
+      "mobileBottomRow": 1611,
+      "mobileLeftColumn": 0,
+      "mobileRightColumn": 908,
+      "mobileTopRow": 1,
+      "needsErrorInfo": false,
+      "parentColumnSpace": 1,
+      "parentId": "qg95lnv3rz",
+      "parentRowSpace": 1,
+      "renderMode": "CANVAS",
+      "responsiveBehavior": "fill",
+      "rightColumn": 908,
+      "tabId": "tab5xv0f9pi5o",
+      "tabName": "Pulse",
+      "topRow": 1,
+      "type": "CANVAS_WIDGET",
+      "version": 1,
+      "widgetId": "m8pm4rma02",
+      "widgetName": "Canvas38"
     }
   ],
   "defaultTab": "Usage Logs",
@@ -428,6 +473,13 @@
       "label": "Key numbers",
       "positioning": "vertical",
       "widgetId": "3lujnq5rwf"
+    },
+    "tab5xv0f9pi5o": {
+      "id": "tab5xv0f9pi5o",
+      "index": 8,
+      "isVisible": true,
+      "label": "Pulse",
+      "widgetId": "m8pm4rma02"
     },
     "tabdu5zbpld8f": {
       "id": "tabdu5zbpld8f",
