@@ -38,9 +38,10 @@
     "total_nudges",
     "total_active_seconds",
     "users",
-    "transactions_consumed"
+    "transactions_consumed",
+    "call_type"
   ],
-  "columnUpdatedAt": 1781167343549,
+  "columnUpdatedAt": 1781270810482,
   "columnWidthMap": {
     "_id": 135,
     "autoFillDocuments": 575,
@@ -102,6 +103,9 @@
     },
     {
       "key": "primaryColumns.customColumn1.computedValue"
+    },
+    {
+      "key": "primaryColumns.call_type.computedValue"
     }
   ],
   "dynamicPropertyPathList": [
@@ -130,8 +134,8 @@
   "mobileRightColumn": 6,
   "mobileTopRow": 0,
   "needsErrorInfo": false,
-  "originalBottomRow": 150,
-  "originalTopRow": 11,
+  "originalBottomRow": 149,
+  "originalTopRow": 10,
   "parentColumnSpace": 13.25,
   "parentId": "9b54lmh55u",
   "parentRowSpace": 10,
@@ -204,7 +208,7 @@
       "allowCellWrapping": false,
       "allowSameOptionsInNewRow": true,
       "columnType": "date",
-      "computedValue": "{{pulse.processedTableData.map((currentRow, currentIndex) => ( moment(parseInt(currentRow[\"call_start_time\"])).format(\"DD/MM/YYYY HH:mm:ss\")))}}",
+      "computedValue": "{{pulse.processedTableData.map((currentRow, currentIndex) => ( moment(parseInt(currentRow[\"call_start_time\"]))))}}",
       "currencyCode": "USD",
       "decimals": 0,
       "enableFilter": true,
@@ -226,6 +230,40 @@
       "originalId": "call_start_time",
       "outputFormat": "YYYY-MM-DD HH:mm",
       "sticky": "",
+      "textSize": "0.875rem",
+      "thousandSeparator": true,
+      "validation": {},
+      "verticalAlignment": "CENTER",
+      "width": 150
+    },
+    "call_type": {
+      "alias": "call_type",
+      "allowCellWrapping": false,
+      "allowSameOptionsInNewRow": true,
+      "cellBackground": "",
+      "columnType": "text",
+      "computedValue": "{{pulse.processedTableData.map((currentRow, currentIndex) => ( currentRow[\"call_type\"]))}}",
+      "currencyCode": "USD",
+      "decimals": 0,
+      "enableFilter": true,
+      "enableSort": true,
+      "fontStyle": "",
+      "horizontalAlignment": "LEFT",
+      "id": "call_type",
+      "index": 3,
+      "isCellEditable": false,
+      "isCellVisible": true,
+      "isDerived": false,
+      "isDisabled": false,
+      "isDiscardVisible": true,
+      "isEditable": false,
+      "isSaveVisible": true,
+      "isVisible": true,
+      "label": "call_type",
+      "notation": "standard",
+      "originalId": "call_type",
+      "sticky": "",
+      "textColor": "",
       "textSize": "0.875rem",
       "thousandSeparator": true,
       "validation": {},
