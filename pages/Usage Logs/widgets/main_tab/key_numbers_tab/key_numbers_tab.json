@@ -234,6 +234,51 @@
       "version": 1,
       "widgetId": "m53b1xe38t",
       "widgetName": "Canvas26"
+    },
+    {
+      "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
+      "bottomRow": 1510,
+      "boxShadow": "{{appsmith.theme.boxShadow.appBoxShadow}}",
+      "canExtend": false,
+      "containerStyle": "none",
+      "detachFromLayout": true,
+      "dynamicBindingPathList": [
+        {
+          "key": "borderRadius"
+        },
+        {
+          "key": "boxShadow"
+        }
+      ],
+      "dynamicHeight": "AUTO_HEIGHT",
+      "dynamicTriggerPathList": [],
+      "flexLayers": [],
+      "isLoading": false,
+      "isVisible": true,
+      "key": "eu4e3h4sjh",
+      "leftColumn": 0,
+      "maxDynamicHeight": 9000,
+      "minDynamicHeight": 4,
+      "minHeight": 1550,
+      "minWidth": 450,
+      "mobileBottomRow": 1551,
+      "mobileLeftColumn": 0,
+      "mobileRightColumn": 888,
+      "mobileTopRow": 1,
+      "needsErrorInfo": false,
+      "parentColumnSpace": 1,
+      "parentId": "ngvznwtqmq",
+      "parentRowSpace": 1,
+      "renderMode": "CANVAS",
+      "responsiveBehavior": "fill",
+      "rightColumn": 888,
+      "tabId": "tab0d6rp8hh2a",
+      "tabName": "Pulse",
+      "topRow": 1,
+      "type": "CANVAS_WIDGET",
+      "version": 1,
+      "widgetId": "xf9125k6yi",
+      "widgetName": "Canvas39"
     }
   ],
   "defaultTab": "Autofill",
@@ -270,6 +315,14 @@
   "shouldScrollContents": true,
   "shouldShowTabs": true,
   "tabsObj": {
+    "tab0d6rp8hh2a": {
+      "id": "tab0d6rp8hh2a",
+      "index": 4,
+      "isDuplicateLabel": false,
+      "isVisible": true,
+      "label": "Pulse",
+      "widgetId": "xf9125k6yi"
+    },
     "tab1": {
       "id": "tab1",
       "index": 0,
@@ -290,7 +343,7 @@
     },
     "tab7anvg39amv": {
       "id": "tab7anvg39amv",
-      "index": 4,
+      "index": 5,
       "isDuplicateLabel": false,
       "isVisible": true,
       "label": "Licenses",
@@ -308,7 +361,7 @@
       "id": "tabi11bkc4xrs",
       "index": 2,
       "isDuplicateLabel": false,
-      "isVisible": false,
+      "isVisible": true,
       "label": "AI Teammate",
       "widgetId": "m53b1xe38t"
     }

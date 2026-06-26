@@ -74,27 +74,12 @@ export default {
 			case 'AI Teammate':
 				return ai_teammate_qry.run();
 
-
 			case 'AI Teammate - RFP':
 				return ai_teammate_rfp_qry.run();
 
 			case 'Workflows':
 				return workflow_logs_qry.run();
-				//       .run()
-				//       .then(() => {
-				//         // Once generateAnswered_q1 query is successful, run the getUniqueIDCount
-				//         getUniqueIds_demo_js01.getUniqueIDCount();
-				//       })
-				//       .catch((error) => {
-				//         // Log the error if something goes wrong
-				//         console.log("Error getting unique count:", error);
-				//       });
-				//   case 'Search':
-				//     return search_qry.run();  // Run the query for 'No information found'
-				//   case 'Rewrite':
-				//     return rewrite_qry.run();  // Run the query for 'Generate count'
-				//   case 'Feedback':
-				//     return feedback_qry.run();  // Run the query for 'Generate count'
+
 			default:
 				showAlert("No valid sub-tab selected under 'Usage Logs'.");
 		}
@@ -160,6 +145,19 @@ export default {
 				// return autofillRunCounts_q01.run();  // Run the query for 'Autofill runs'
 			case 'Projects':
 				return projects_count_qry.run();  // Run the query for 'Active documents'
+			case 'Pulse':
+				return Promise.all([
+					pulse_stats.run(),
+					pulse_list.run()
+				])
+					.then(([result1, result2]) => {
+					console.log("Both pulse queries executed successfully!");
+					return { result1, result2 }; // Return both results
+				})
+					.catch((error) => {
+					console.error("Error running queries:", error);
+					return { error }; // Handle errors gracefully
+				});
 			default:
 				showAlert("No valid sub-tab selected under 'Key numbers'.");
 		}

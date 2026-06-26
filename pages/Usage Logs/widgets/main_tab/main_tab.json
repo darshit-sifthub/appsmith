@@ -477,7 +477,7 @@
     "tab5xv0f9pi5o": {
       "id": "tab5xv0f9pi5o",
       "index": 8,
-      "isVisible": true,
+      "isVisible": false,
       "label": "Pulse",
       "widgetId": "m8pm4rma02"
     },
