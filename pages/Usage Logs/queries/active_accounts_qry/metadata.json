@@ -23,9 +23,9 @@
       "pluginId": "mysql-plugin"
     },
     "dynamicBindingPathList": [],
-    "executeOnLoad": false,
     "name": "active_accounts_qry",
     "pageId": "Usage Logs",
+    "runBehaviour": "MANUAL",
     "userSetOnLoad": true
   }
 }

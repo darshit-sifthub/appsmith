@@ -101,9 +101,9 @@
         "key": "formData.count.query.data"
       }
     ],
-    "executeOnLoad": false,
     "name": "qna_stats_qry",
     "pageId": "Usage Logs",
+    "runBehaviour": "MANUAL",
     "userSetOnLoad": true
   }
 }

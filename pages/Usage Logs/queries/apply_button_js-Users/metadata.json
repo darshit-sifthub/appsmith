@@ -26,10 +26,10 @@
         "key": "body"
       }
     ],
-    "executeOnLoad": false,
     "fullyQualifiedName": "apply_button_js.Users",
     "name": "Users",
     "pageId": "Usage Logs",
+    "runBehaviour": "MANUAL",
     "userSetOnLoad": false
   }
 }

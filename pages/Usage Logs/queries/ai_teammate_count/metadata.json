@@ -100,9 +100,9 @@
         "key": "formData.count.query.data"
       }
     ],
-    "executeOnLoad": false,
     "name": "ai_teammate_count",
     "pageId": "Usage Logs",
+    "runBehaviour": "MANUAL",
     "userSetOnLoad": false
   }
 }

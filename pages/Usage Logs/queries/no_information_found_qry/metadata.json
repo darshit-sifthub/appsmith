@@ -106,9 +106,9 @@
         "key": "formData.find.query.data"
       }
     ],
-    "executeOnLoad": false,
     "name": "no_information_found_qry",
     "pageId": "Usage Logs",
+    "runBehaviour": "MANUAL",
     "userSetOnLoad": true
   }
 }

@@ -100,9 +100,9 @@
         "key": "formData.aggregate.arrayPipelines.data"
       }
     ],
-    "executeOnLoad": false,
     "name": "questions_answered_qry",
     "pageId": "Usage Logs",
+    "runBehaviour": "MANUAL",
     "userSetOnLoad": true
   }
 }

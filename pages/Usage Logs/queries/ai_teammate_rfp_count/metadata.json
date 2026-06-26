@@ -103,9 +103,9 @@
         "key": "formData.count.query.data"
       }
     ],
-    "executeOnLoad": false,
     "name": "ai_teammate_rfp_count",
     "pageId": "Usage Logs",
+    "runBehaviour": "MANUAL",
     "userSetOnLoad": false
   }
 }

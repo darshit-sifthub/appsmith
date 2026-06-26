@@ -104,9 +104,9 @@
         "key": "body"
       }
     ],
-    "executeOnLoad": false,
     "name": "no_information_count_qry",
     "pageId": "Usage Logs",
+    "runBehaviour": "MANUAL",
     "userSetOnLoad": false
   }
 }

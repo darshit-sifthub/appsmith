@@ -45,9 +45,9 @@
       "name": "mongo-products-prod-us-east-2",
       "pluginId": "mongo-plugin"
     },
-    "executeOnLoad": false,
     "name": "ai_teammate_key_numbers",
     "pageId": "Usage Logs",
+    "runBehaviour": "MANUAL",
     "userSetOnLoad": false
   }
 }
