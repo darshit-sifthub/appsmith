@@ -100,9 +100,9 @@
         "key": "formData.aggregate.arrayPipelines.data"
       }
     ],
-    "executeOnLoad": true,
+    "executeOnLoad": false,
     "name": "sow_logs_qry",
     "pageId": "Usage Logs",
-    "userSetOnLoad": false
+    "userSetOnLoad": true
   }
 }

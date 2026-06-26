@@ -398,7 +398,7 @@
       "id": "tabdhi23wjfjl",
       "index": 5,
       "isDuplicateLabel": false,
-      "isVisible": true,
+      "isVisible": false,
       "label": "AI Teammate - RFP (Deprecated))",
       "widgetId": "1tlhyi62e0"
     },
