@@ -29,7 +29,7 @@
     "fullyQualifiedName": "user_mapping_js.mapUsers",
     "name": "mapUsers",
     "pageId": "Usage Logs",
-    "runBehaviour": "MANUAL",
-    "userSetOnLoad": false
+    "runBehaviour": "AUTOMATIC",
+    "userSetOnLoad": true
   }
 }
