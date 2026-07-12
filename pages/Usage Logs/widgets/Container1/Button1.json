@@ -41,7 +41,7 @@
   "isLoading": false,
   "isVisible": "{{ usage_logs_tab.selectedTab == \"AI Teammate\" }}",
   "key": "w5j14099ph",
-  "leftColumn": 61,
+  "leftColumn": 60,
   "minWidth": 120,
   "mobileBottomRow": 5,
   "mobileLeftColumn": 0,
